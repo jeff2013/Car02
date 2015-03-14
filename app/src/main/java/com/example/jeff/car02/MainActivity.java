@@ -77,6 +77,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 getCurrentUser();
                 successful_Login();
             }
+            
             else {
                 Toast.makeText(MainActivity.this, "Problem logging in", Toast.LENGTH_LONG).show();
             }
