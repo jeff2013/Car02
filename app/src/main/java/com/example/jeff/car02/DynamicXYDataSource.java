@@ -14,7 +14,7 @@ import java.util.Observer;
  * The plots need to register with their data sources
  * The Data source polls the Mojio api for data
  */
-public abstract class XYDataSource implements Runnable, XYSeries {
+public abstract class DynamicXYDataSource implements Runnable, XYSeries {
 
     /**
      * Used to store XY values
@@ -36,7 +36,7 @@ public abstract class XYDataSource implements Runnable, XYSeries {
     /**
      * Observer instance
      */
-    private MyObservable notifier;
+     protected MyObservable notifier;
 
     /**
      * The update interval in milliseconds
@@ -47,7 +47,7 @@ public abstract class XYDataSource implements Runnable, XYSeries {
      * Creates a data source with an update interval in milliseconds
      * @param updateInterval
      */
-    public XYDataSource(int updateInterval) {
+    public DynamicXYDataSource(int updateInterval) {
         XYVals = new ArrayList<Pair<Number, Number>>();
         notifier = new MyObservable();
         this.updateInterval = updateInterval;
@@ -63,7 +63,7 @@ public abstract class XYDataSource implements Runnable, XYSeries {
      */
     @Override
     public void run() {
-        isRunning = true;
+        isRunning = updateInterval > 0;
         try {
             while(isRunning) {
                 getData();

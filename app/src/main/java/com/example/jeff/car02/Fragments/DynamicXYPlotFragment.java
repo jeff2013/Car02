@@ -1,9 +1,10 @@
-package com.example.jeff.car02;
+package com.example.jeff.car02.Fragments;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -11,7 +12,12 @@ import android.view.ViewGroup;
 
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
+import com.example.jeff.car02.DynamicXYDataSource;
+import com.example.jeff.car02.R;
+import com.example.jeff.car02.StaticXYDataSource;
+import com.example.jeff.car02.TestDynamicXYDataSource;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -30,11 +36,12 @@ public class DynamicXYPlotFragment extends Fragment {
      * The XY Plot instance
      */
     private XYPlot dynamicPlot;
-    private XYDataSource data;
+    private DynamicXYDataSource data;
     private Thread dataThread;
     private OnFragmentInteractionListener mListener;
     private DynamicXYPlotUpdater plotUpdater;
     private LineAndPointFormatter format;
+    private boolean isDynamic;
 
     // Used to get updates from the data source
     private class DynamicXYPlotUpdater implements Observer {
@@ -99,7 +106,10 @@ public class DynamicXYPlotFragment extends Fragment {
         format.getVertexPaint().setAlpha(0x00);
         // This is for debug purposes, create a test data source
         //TODO: Remove debug stuffs
-        TestXYDataSource data = new TestXYDataSource(1000);
+        ArrayList<Pair<Number, Number>> nums = new ArrayList<Pair<Number, Number>>();
+        nums.add(new Pair<Number, Number>(1, 1));
+        nums.add(new Pair<Number, Number>(2, 2));
+        StaticXYDataSource data = new StaticXYDataSource(nums);
         setDataSource(data);
         return view;
     }
@@ -132,7 +142,7 @@ public class DynamicXYPlotFragment extends Fragment {
      * Changes the data source
      * @param data
      */
-    public void setDataSource(XYDataSource data) {
+    public void setDataSource(DynamicXYDataSource data) {
         if(this.data != null) {
             // Unregister the plot from the old data
             this.data.deleteObserver(plotUpdater);
@@ -142,8 +152,8 @@ public class DynamicXYPlotFragment extends Fragment {
         // Change our data set
         this.data = data;
         // Register with the new data
-        this.data.addObserver(plotUpdater);
         dynamicPlot.addSeries(this.data, format);
+        this.data.addObserver(plotUpdater);
         // Start the polling thread
         dataThread = new Thread(data);
         dataThread.start();
