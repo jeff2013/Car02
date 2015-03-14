@@ -49,8 +49,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
-        doOauth2Login();
-
+        if(!mMojio.isUserLoggedIn()) doOauth2Login();
+        else successful_Login();
     }
 
     @Override
