@@ -104,13 +104,6 @@ public class DynamicXYPlotFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onStart() {
-        // Start the data polling thread if it exists
-        dataThread = new Thread(data);
-        dataThread.start();
-        super.onStart();
-    }
 
     @Override
     public void onResume() {
