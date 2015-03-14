@@ -35,6 +35,9 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojio.mojiosdk.MojioClient;
+import com.mojio.mojiosdk.models.User;
+
 
 /**
  * A login screen that offers login via email/password and via Google+ sign in.
