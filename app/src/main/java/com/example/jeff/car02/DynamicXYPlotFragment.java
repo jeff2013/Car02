@@ -85,19 +85,28 @@ public class DynamicXYPlotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_dynamic_xyplot, container, false);        // Get the plot instance
+        View view = inflater.inflate(R.layout.fragment_dynamic_xyplot, container, false);
+        // Get the plot instance
         dynamicPlot = (XYPlot) view.findViewById(R.id.XYPlot);
+        // Create our Plot Update Observer
         plotUpdater = new DynamicXYPlotUpdater(dynamicPlot);
+        // Set up formatting junk
         format = new LineAndPointFormatter();
         format.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
         format.getLinePaint().setStrokeWidth(10);
-        //TestXYDataSource data = new TestXYDataSource(100);
-        //setDataSource(data);
+        format.getLinePaint().setColor(Color.rgb(0x38, 0x9C, 0xFF));
+        format.getFillPaint().setAlpha(0x00);
+        format.getVertexPaint().setAlpha(0x00);
+        // This is for debug purposes, create a test data source
+        //TODO: Remove debug stuffs
+        TestXYDataSource data = new TestXYDataSource(1000);
+        setDataSource(data);
         return view;
     }
 
     @Override
     public void onStart() {
+        // Start the data polling thread if it exists
         dataThread = new Thread(data);
         dataThread.start();
         super.onStart();
@@ -105,6 +114,7 @@ public class DynamicXYPlotFragment extends Fragment {
 
     @Override
     public void onResume() {
+        // Resume the data polling thread
         dataThread = new Thread(data);
         dataThread.start();
         super.onResume();
@@ -112,7 +122,10 @@ public class DynamicXYPlotFragment extends Fragment {
 
     @Override
     public void onPause() {
-        data.terminate();
+        // If we have a data source, terminate it
+        if(data != null) {
+            data.terminate();
+        }
         super.onPause();
     }
 
@@ -138,6 +151,7 @@ public class DynamicXYPlotFragment extends Fragment {
         // Register with the new data
         this.data.addObserver(plotUpdater);
         dynamicPlot.addSeries(this.data, format);
+        // Start the polling thread
         dataThread = new Thread(data);
         dataThread.start();
     }
