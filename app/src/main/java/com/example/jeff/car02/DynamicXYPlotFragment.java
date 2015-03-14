@@ -112,7 +112,9 @@ public class DynamicXYPlotFragment extends Fragment {
 
     @Override
     public void onPause() {
-        data.terminate();
+        if(data != null) {
+            data.terminate();
+        }
         super.onPause();
     }
 
