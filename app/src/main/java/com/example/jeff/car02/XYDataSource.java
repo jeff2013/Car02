@@ -20,6 +20,7 @@ public abstract class XYDataSource implements Runnable, XYSeries {
      * Used to store XY values
      */
     protected ArrayList<Pair<Number, Number>> XYVals;
+    private boolean isRunning;
 
     /**
      * Used to handle observation stuffs
@@ -53,17 +54,29 @@ public abstract class XYDataSource implements Runnable, XYSeries {
     }
 
     /**
+     * Used To Fetch and Store data from the API
+     */
+    public abstract void getData();
+
+    /**
      * Polls Mojio for data, then sleeps updateInterval milliseconds
      */
     @Override
     public void run() {
+        isRunning = true;
         try {
-            //TODO: Poll Mojio for data, and add data to the list
-            notifier.notifyObservers();
-            Thread.sleep(updateInterval);
+            while(isRunning) {
+                getData();
+                notifier.notifyObservers();
+                Thread.sleep(updateInterval);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void terminate() {
+        isRunning = false;
     }
 
     /**

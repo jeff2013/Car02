@@ -130,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
             switch(position){
                 case 0:
-                    position_fragment = new Fragment_section1();
+                    position_fragment = new DynamicXYPlotFragment();
                     break;
                 case 1:
                     position_fragment = new Fragment_section2();
