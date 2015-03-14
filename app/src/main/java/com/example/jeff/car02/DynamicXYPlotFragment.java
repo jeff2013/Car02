@@ -31,6 +31,7 @@ public class DynamicXYPlotFragment extends Fragment {
      */
     private XYPlot dynamicPlot;
     private XYDataSource data;
+    private Thread dataThread;
     private OnFragmentInteractionListener mListener;
     private DynamicXYPlotUpdater plotUpdater;
     private LineAndPointFormatter format;
@@ -77,35 +78,43 @@ public class DynamicXYPlotFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Get the plot instance
-        dynamicPlot = (XYPlot) getActivity().findViewById(R.id.XYPlot);
-        plotUpdater = new DynamicXYPlotUpdater(dynamicPlot);
-        format = new LineAndPointFormatter();
-        //format.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
-        //format.getLinePaint().setStrokeWidth(10);
 
-        TestXYDataSource data = new TestXYDataSource(100);
-        setDataSource(data);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dynamic_xyplot, container, false);
+        View view = inflater.inflate(R.layout.fragment_dynamic_xyplot, container, false);        // Get the plot instance
+        dynamicPlot = (XYPlot) view.findViewById(R.id.XYPlot);
+        plotUpdater = new DynamicXYPlotUpdater(dynamicPlot);
+        format = new LineAndPointFormatter();
+        format.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
+        format.getLinePaint().setStrokeWidth(10);
+        //TestXYDataSource data = new TestXYDataSource(100);
+        //setDataSource(data);
+        return view;
     }
 
+    @Override
+    public void onStart() {
+        dataThread = new Thread(data);
+        dataThread.start();
+        super.onStart();
+    }
 
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
+    @Override
+    public void onResume() {
+        dataThread = new Thread(data);
+        dataThread.start();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        data.terminate();
+        super.onPause();
+    }
 
     @Override
     public void onDetach() {
@@ -123,11 +132,14 @@ public class DynamicXYPlotFragment extends Fragment {
             this.data.deleteObserver(plotUpdater);
             dynamicPlot.removeSeries(data);
         }
+        data.terminate();
         // Change our data set
         this.data = data;
         // Register with the new data
         this.data.addObserver(plotUpdater);
         dynamicPlot.addSeries(this.data, format);
+        dataThread = new Thread(data);
+        dataThread.start();
     }
 
     /**
