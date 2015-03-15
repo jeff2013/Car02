@@ -114,43 +114,76 @@ public class DynamicXYPlotFragment extends Fragment {
         format.getLinePaint().setStrokeWidth(10);
         format.getLinePaint().setColor(Color.rgb(0x38, 0x9C, 0xFF));
         format.getFillPaint().setAlpha(0x00);
+        //format.getVertexPaint().setAlpha(0x00);
+        // Create a set of query options
         Map<String, String> queryParam = new HashMap();
         queryParam.put("limit", "1000");
         queryParam.put("offset", "0");
+        // Query the API for the list of trips
         mMojio.get(Trip[].class, "Trips", queryParam, new MojioClient.ResponseListener<Trip[]>() {
             @Override
             public void onSuccess(Trip[] tripResult) {
+                // Get the latest trip
                 Trip latestTrip = tripResult[tripResult.length - 1];
+                // Set our query options
                 Map<String, String> queryParam = new HashMap();
                 queryParam.put("limit", "1000");
                 queryParam.put("offset", "0");
+                // Add the id of the latest trip to the query options
                 queryParam.put("id", latestTrip._id);
+                // Get a list of Events for the latest trip
                 mMojio.get(Event[].class, "Trips/"+latestTrip._id+"/Events", queryParam, new MojioClient.ResponseListener<Event[]>() {
                     @Override
                     public void onSuccess(Event[] result) {
                         // Generate a set of XY values
                         ArrayList<Pair<Number, Number>> pairs = new ArrayList();
+                        // Set up our previous distance, used in our distance calculations
                         float prevDist = 0;
-                        int count = 0;
+                        // Set up our date formatter
                         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                        // Iterate through all of our Events
                         for(int i = 1; i < result.length - 1; i++) {
+                            // Create our date objects
                             Date prevd = new Date();
                             Date d = new Date();
+                            // Try to get the Date, thow errors if there are failures, then continue to the next cycle
                             try {
                                 d = dateFormatter.parse(result[i].Time);
                                 prevd = dateFormatter.parse(result[i-1].Time);
                             } catch (ParseException e) {
                                 Toast.makeText(DynamicXYPlotFragment.this.getActivity(), "Parse Error", Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
+                                continue;
                             }
+                            // Calculate the total distance, we need to do this because the provided distance isn't granular enough
                             float distance = prevDist + result[i].Speed*(d.getTime()-prevd.getTime())/(60*60*1000);
                             float deltaFuel = distance*result[i].FuelEfficiency - prevDist*result[i-1].FuelEfficiency;
-                            float DeltaCO2 = (deltaFuel*2.3035f/10)/(d.getTime() - prevd.getTime());
-                            float totalCO2 = distance*result[i].FuelEfficiency*2.3035f;
-
-                            pairs.add(new Pair<Number, Number>(d.getTime(), DeltaCO2));
+                            // Calculate CO2 Values, in KG of CO2
+                            float deltaCO2 = (deltaFuel*2.3035f*100)/(d.getTime() - prevd.getTime());
+                            float totalCO2 = distance*result[i].FuelEfficiency*2.3035f*100;
+                            // Switch on which values to display
+                            int selector = 1;
+                            switch (selector) {
+                                case 0:
+                                    pairs.add(new Pair<Number, Number>(d.getTime(), totalCO2));
+                                    break;
+                                case 1:
+                                    pairs.add(new Pair<Number, Number>(d.getTime(), deltaCO2));
+                                    break;
+                                case 2:
+                                    pairs.add(new Pair<Number, Number>(d.getTime(), result[i].FuelEfficiency));
+                                    break;
+                                case 3:
+                                    pairs.add(new Pair<Number, Number>(d.getTime(), distance));
+                                    break;
+                                case 4:
+                                    pairs.add(new Pair<Number, Number>(d.getTime(), deltaFuel));
+                                    break;
+                            }
+                            // Do some junk to prepare for the next iteration
                             prevDist = distance;
                         }
+                        // Create a data source, set it as our data source, and enable
                         StaticXYDataSource data = new StaticXYDataSource(pairs);
                         setDataSource(data);
                         enableDataSource();
