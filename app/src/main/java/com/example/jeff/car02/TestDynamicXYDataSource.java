@@ -3,12 +3,16 @@ package com.example.jeff.car02;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mojio.mojiosdk.MojioClient;
+import com.mojio.mojiosdk.models.Event;
 import com.mojio.mojiosdk.models.Mojio;
 import com.mojio.mojiosdk.models.Trip;
 import com.mojio.mojiosdk.models.Vehicle;
 import com.mojio.mojiosdk.networking.MojioRequest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,21 +52,33 @@ public class TestDynamicXYDataSource extends DynamicXYDataSource {
         Map<String, String> queryParam = new HashMap();
         queryParam.put("limit", "1000");
         queryParam.put("offset", "0");
-        mojio.get(Vehicle[].class, "Vehicle", queryParam, new MojioClient.ResponseListener<Vehicle[]>() {
-            public void onSuccess(Vehicle[] vehicles) {
+        mojio.get(Trip[].class, "Trips", queryParam, new MojioClient.ResponseListener<Trip[]>() {
+            public void onSuccess(Trip[] trips) {
+                Trip latestTrip = trips[trips.length - 1];
                 Map<String, String> queryParam = new HashMap();
-                queryParam.put("id", vehicles[vehicles.length - 1].CurrentTrip + "");
-
-                mojio.get(Trip.class, "Trips" + vehicles[vehicles.length - 1].CurrentTrip, queryParam, new MojioClient.ResponseListener<Trip>() {
-                    @Override
-                    public void onSuccess(Trip result) {
+                queryParam.put("limit", "1000");
+                queryParam.put("offset", "0");
+                // Add the id of the latest trip to the query options
+                queryParam.put("id", latestTrip._id);
+                // Get a list of Events for the latest trip
+                mojio.get(Event[].class, "Trips/" + latestTrip._id + "/Events", queryParam, new MojioClient.ResponseListener<Event[]>() {
+                    public void onSuccess(Event[] events) {
+                        Event latestEvent = events[events.length - 1];
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                        locations.add(new LatLng(latestEvent.Location.Lat, latestEvent.Location.Lng));
                         Date d = new Date();
-                        XYVals.add(new Pair<Number, Number>(d.getTime(), result.FuelEfficiency));
+
+                        try {
+                            d = dateFormatter.parse(latestEvent.Time);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        XYVals.add(new Pair<Number, Number>(d.getTime(), latestEvent.FuelEfficiency));
+                        notifier.notifyObservers();
                     }
 
-                    @Override
                     public void onFailure(String error) {
-
+                        Log.e("Mojio API error: ", error);
                     }
                 });
             }
