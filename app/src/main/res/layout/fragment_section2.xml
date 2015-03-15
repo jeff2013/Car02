@@ -1,7 +1,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.example.jeff.car02.Fragments.Fragment_section2">
-
-    <com.google.android.gms.maps.MapView android:id="@+id/MapView" android:layout_width="match_parent" android:layout_height="match_parent" />
-
+    android:layout_height="match_parent" tools:context="com.example.jeff.car02.Fragments.Fragment_section2"
+    android:clickable="true">
+<!--
+<com.google.android.gms.maps.MapView
+    android:id="@+id/mView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:enabled="true"
+    android:clickable="true"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
+-->
 </FrameLayout>
+

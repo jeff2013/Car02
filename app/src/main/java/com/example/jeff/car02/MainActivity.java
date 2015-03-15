@@ -266,6 +266,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     break;
                 case 2:
                     position_fragment = new Fragment_section3();
+                    break;
                 default:
                     position_fragment = new Fragment_section2();
                     break;
