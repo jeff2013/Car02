@@ -3,9 +3,11 @@ package com.example.jeff.car02;
 import android.util.Pair;
 
 import com.androidplot.xy.XYSeries;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -20,6 +22,7 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
      * Used to store XY values
      */
     protected ArrayList<Pair<Number, Number>> XYVals;
+    protected ArrayList<LatLng> locations;
     private boolean isRunning;
 
     /**
@@ -32,6 +35,17 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
             super.notifyObservers();
         }
     }
+
+    public float getMaxY(){
+        float mx = 0;
+        for(int i=0;i<XYVals.size();++i){
+            float tmp = XYVals.get(i).second.floatValue();
+            mx = mx < tmp ? tmp : mx;
+        }
+        return mx;
+    }
+
+    public List<LatLng> getLocations(){ return locations; }
 
     /**
      * Observer instance
