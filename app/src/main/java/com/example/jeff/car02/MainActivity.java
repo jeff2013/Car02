@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.Fragments.Fragment_section1;
 import com.example.jeff.car02.Fragments.Fragment_section2;
+import com.example.jeff.car02.Fragments.Fragment_section3;
+import com.google.android.gms.maps.MapFragment;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.models.User;
 import com.mojio.mojiosdk.models.Vehicle;
@@ -263,7 +265,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     position_fragment = new Fragment_section2();
                     break;
                 case 2:
-                    break;
+                    position_fragment = new Fragment_section3();
                 default:
                     position_fragment = new Fragment_section2();
                     break;
