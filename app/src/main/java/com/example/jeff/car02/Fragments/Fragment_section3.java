@@ -9,14 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.jeff.car02.DynamicXYDataSource;
 import com.example.jeff.car02.R;
 import com.example.jeff.car02.StaticXYDataSource;
+import com.example.jeff.car02.TestDynamicXYDataSource;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.mojio.mojiosdk.MojioClient;
@@ -28,7 +31,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by jeff on 2015-03-14.
@@ -37,6 +43,8 @@ public class Fragment_section3 extends SupportMapFragment {
     private GoogleMap map;
 
     private MojioClient mMojio;
+    private DynamicXYDataSource dataSource;
+    private List<Marker> markers;
 
     public void setMojioClient(MojioClient client){
         mMojio = client;
@@ -47,7 +55,9 @@ public class Fragment_section3 extends SupportMapFragment {
         View tmp = super.onCreateView(inflater,container,savedInstanceState);
         map = getMap();
 
-        Map<String, String> queryParam = new HashMap();
+        markers = new ArrayList<Marker>();
+
+        /*Map<String, String> queryParam = new HashMap();
         queryParam.put("limit", "1000");
         queryParam.put("offset", "0");
         mMojio.get(Trip[].class, "Trips", queryParam, new MojioClient.ResponseListener<Trip[]>() {
@@ -120,6 +130,37 @@ public class Fragment_section3 extends SupportMapFragment {
 
             public void onFailure(String error) {
                 Log.d("Mojio API Error", error);
+            }
+        });*/
+
+        dataSource = new TestDynamicXYDataSource(1000,mMojio);
+        dataSource.addObserver(new Observer() {
+            @Override
+            public void update(Observable observable, Object data) {
+                List<LatLng> positions = dataSource.getLocations();
+
+                float maxData = dataSource.getMaxY();
+
+                map.clear();
+
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                for(int i=0;i<dataSource.size()&&i<positions.size();++i){
+                    MarkerOptions opt = new MarkerOptions();
+
+                    opt.draggable(false);
+                    opt.position(positions.get(i));
+                    opt.flat(true);
+                    float normalisedData = dataSource.getY(i).floatValue()/maxData;
+                    float colour = (BitmapDescriptorFactory.HUE_RED-BitmapDescriptorFactory.HUE_BLUE)*normalisedData +BitmapDescriptorFactory.HUE_BLUE;
+                    colour = colour>359?359:colour;
+                    colour= colour<0?0:colour;
+                    opt.icon(BitmapDescriptorFactory.defaultMarker(colour));
+                    builder.include(positions.get(i));
+                    map.addMarker(opt);
+                }
+
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(),100));
             }
         });
 

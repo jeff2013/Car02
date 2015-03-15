@@ -5,6 +5,7 @@ import android.util.Pair;
 import android.widget.Toast;
 
 import com.androidplot.xy.XYPlot;
+import com.google.android.gms.maps.model.LatLng;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.models.Event;
 import com.mojio.mojiosdk.models.Mojio;
@@ -15,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observer;
 
@@ -86,6 +88,9 @@ public class StaticXYDataSource extends DynamicXYDataSource {
                                 e.printStackTrace();
                                 continue;
                             }
+                            // add latlng to internal list of locations
+                            locations.add(new LatLng(result[i].Location.Lat,result[i].Location.Lng));
+
                             // Calculate the total distance, we need to do this because the provided distance isn't granular enough
                             float distance = prevDist + result[i].Speed * (d.getTime() - prevd.getTime()) / (60 * 60 * 1000);
                             float deltaFuel = distance * result[i].FuelEfficiency - prevDist * result[i - 1].FuelEfficiency;
