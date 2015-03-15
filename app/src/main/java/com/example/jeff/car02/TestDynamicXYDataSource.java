@@ -48,23 +48,12 @@ public class TestDynamicXYDataSource extends DynamicXYDataSource {
         Map<String, String> queryParam = new HashMap();
         queryParam.put("limit", "1000");
         queryParam.put("offset", "0");
-        mojio.get(Vehicle[].class, "Vehicle", queryParam, new MojioClient.ResponseListener<Vehicle[]>() {
-            public void onSuccess(Vehicle[] vehicles) {
-                Map<String, String> queryParam = new HashMap();
-                queryParam.put("id", vehicles[vehicles.length - 1].CurrentTrip + "");
-
-                mojio.get(Trip.class, "Trips" + vehicles[vehicles.length - 1].CurrentTrip, queryParam, new MojioClient.ResponseListener<Trip>() {
-                    @Override
-                    public void onSuccess(Trip result) {
-                        Date d = new Date();
-                        XYVals.add(new Pair<Number, Number>(d.getTime(), result.FuelEfficiency));
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-
-                    }
-                });
+        mojio.get(Trip[].class, "Trips", queryParam, new MojioClient.ResponseListener<Trip[]>() {
+            public void onSuccess(Trip[] trips) {
+                Trip lastTrip = trips[trips.length - 1];
+                Date d = new Date();
+                XYVals.add(new Pair<Number, Number>(d.getTime(), lastTrip.FuelEfficiency));
+                notifier.notifyObservers();
             }
 
             public void onFailure(String error) {
