@@ -65,11 +65,11 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
     public void run() {
         isRunning = updateInterval > 0;
         try {
-            while(isRunning) {
+            do {
                 getData();
                 notifier.notifyObservers();
                 Thread.sleep(updateInterval);
-            }
+            } while (isRunning);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
