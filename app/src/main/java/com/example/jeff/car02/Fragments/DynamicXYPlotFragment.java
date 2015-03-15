@@ -114,60 +114,11 @@ public class DynamicXYPlotFragment extends Fragment {
         format.getLinePaint().setStrokeWidth(10);
         format.getLinePaint().setColor(Color.rgb(0x38, 0x9C, 0xFF));
         format.getFillPaint().setAlpha(0x00);
-        Map<String, String> queryParam = new HashMap();
-        queryParam.put("limit", "1000");
-        queryParam.put("offset", "0");
-        mMojio.get(Trip[].class, "Trips", queryParam, new MojioClient.ResponseListener<Trip[]>() {
-            @Override
-            public void onSuccess(Trip[] tripResult) {
-                Trip latestTrip = tripResult[tripResult.length - 1];
-                Map<String, String> queryParam = new HashMap();
-                queryParam.put("limit", "1000");
-                queryParam.put("offset", "0");
-                queryParam.put("id", latestTrip._id);
-                mMojio.get(Event[].class, "Trips/"+latestTrip._id+"/Events", queryParam, new MojioClient.ResponseListener<Event[]>() {
-                    @Override
-                    public void onSuccess(Event[] result) {
-                        // Generate a set of XY values
-                        ArrayList<Pair<Number, Number>> pairs = new ArrayList();
-                        float prevDist = 0;
-                        int count = 0;
-                        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                        for(int i = 1; i < result.length - 1; i++) {
-                            Date prevd = new Date();
-                            Date d = new Date();
-                            try {
-                                d = dateFormatter.parse(result[i].Time);
-                                prevd = dateFormatter.parse(result[i-1].Time);
-                            } catch (ParseException e) {
-                                Toast.makeText(DynamicXYPlotFragment.this.getActivity(), "Parse Error", Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-                            float distance = prevDist + result[i].Speed*(d.getTime()-prevd.getTime())/(60*60*1000);
-                            float deltaFuel = distance*result[i].FuelEfficiency - prevDist*result[i-1].FuelEfficiency;
-                            float DeltaCO2 = (deltaFuel*2.3035f/10)/(d.getTime() - prevd.getTime());
-                            float totalCO2 = distance*result[i].FuelEfficiency*2.3035f;
-
-                            pairs.add(new Pair<Number, Number>(d.getTime(), DeltaCO2));
-                            prevDist = distance;
-                        }
-                        StaticXYDataSource data = new StaticXYDataSource(pairs);
-                        setDataSource(data);
-                        enableDataSource();
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-
-                    }
-                });
-            }
-
-            public void onFailure(String error) {
-                Log.d("Mojio API Error", error);
-            }
-
-        });
+        //format.getVertexPaint().setAlpha(0x00);
+        // Create a set of query options
+        StaticXYDataSource data = new StaticXYDataSource(mMojio);
+        setDataSource(data);
+        enableDataSource();
         return view;
     }
 
