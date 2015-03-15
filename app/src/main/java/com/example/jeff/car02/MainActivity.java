@@ -97,7 +97,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     private void getCurrentUser() {
         String entityPath = "Users"; // TODO need userID?
-        HashMap<String, String> queryParams = new HashMap<>();
+        HashMap<String, String> queryParams = new HashMap();
 
         mMojio.get(User[].class, entityPath, queryParams, new MojioClient.ResponseListener<User[]>() {
             @Override
