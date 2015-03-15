@@ -102,7 +102,8 @@ public class Fragment_section3 extends SupportMapFragment {
                             opt.flat(true);
                             float normalisedData = points.get(i)/maxData;
                             float colour = (BitmapDescriptorFactory.HUE_RED-BitmapDescriptorFactory.HUE_BLUE)*normalisedData +BitmapDescriptorFactory.HUE_BLUE;
-                            colour = colour>360?360:colour;
+                            colour = colour>359?359:colour;
+                            colour= colour<0?0:colour;
                             opt.icon(BitmapDescriptorFactory.defaultMarker(colour));
                             map.addMarker(opt);
                         }
