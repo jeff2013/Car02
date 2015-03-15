@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.example.jeff.car02.Fragments.Fragment_section4"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Change in C02 Emissions"
+        android:id="@+id/button"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Total C02 Emissions"
+        android:id="@+id/button2"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Distance Traveled"
+        android:id="@+id/button3"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Change in Fuel"
+        android:id="@+id/button4"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Fuel Efficiency"
+        android:id="@+id/button5"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>

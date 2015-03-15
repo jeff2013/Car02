@@ -30,7 +30,8 @@
                     android:background="@color/material_blue_grey_800"
                     android:elevation="2dp"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true">
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/relativeLayout2">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -48,8 +49,10 @@
                     android:layout_height="wrap_content"
                     android:text="Test"
                     android:textSize="50sp"
+                    android:id="@+id/textview_C02"
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="25dp" />
 
 
             </RelativeLayout>
@@ -87,10 +90,10 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Medium Text"
                     android:textSize="50sp"
-                    android:id="@+id/textView2"
-                    android:layout_below="@+id/relativeLayout"
+                    android:id="@+id/textview_FuelEfficiency"
+                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="58dp" />
+                    android:paddingTop="25dp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -111,13 +114,25 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Card3"
+                        android:text="Distance Traveled"
                         android:textColor="@color/abc_primary_text_material_dark"
                         android:gravity="end"
                         android:layout_centerVertical="true"
                         android:layout_alignParentStart="true"
-                        android:layout_marginLeft="10dp" />
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/DistanceTraveledTitle" />
                 </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:textSize="50sp"
+                    android:id="@+id/textView_DistanceTraveled"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="25dp" />
             </RelativeLayout>
 
         </LinearLayout>

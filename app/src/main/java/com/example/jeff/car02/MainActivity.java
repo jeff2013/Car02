@@ -28,6 +28,7 @@ import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.Fragments.Fragment_section1;
 import com.example.jeff.car02.Fragments.Fragment_section2;
 import com.example.jeff.car02.Fragments.Fragment_section3;
+import com.example.jeff.car02.Fragments.Fragment_section4;
 import com.google.android.gms.maps.MapFragment;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.models.Event;
@@ -257,7 +258,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            Fragment position_fragment = new Fragment_section1();
+            Fragment position_fragment;
 
             switch(position){
                 case 0:
@@ -265,10 +266,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     ((DynamicXYPlotFragment)position_fragment).setMojioClient(mMojio);
                     break;
                 case 1:
-                    position_fragment = new Fragment_section2();
+                    position_fragment = new Fragment_section1();
+                    ((Fragment_section1)position_fragment).setMojio(mMojio);
                     break;
                 case 2:
-                    position_fragment = new Fragment_section3();
+                    position_fragment = new Fragment_section2();
+                    break;
+                case 3:
+                    position_fragment = new Fragment_section4();
                     break;
                 default:
                     position_fragment = new Fragment_section2();
@@ -280,7 +285,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
@@ -293,6 +298,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return getString(R.string.title_section2).toUpperCase(l);
                 case 2:
                     return getString(R.string.title_section3).toUpperCase(l);
+                case 3:
+                    return getString(R.string.title_section4).toUpperCase(l);
             }
             return null;
         }
