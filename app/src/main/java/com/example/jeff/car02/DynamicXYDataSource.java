@@ -78,6 +78,7 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
         isRunning = false;
     }
 
+    public void resume() { isRunning = true; }
     /**
      * Add an observer to the data
      * @param obs

@@ -126,8 +126,9 @@ public class DynamicXYPlotFragment extends Fragment {
     @Override
     public void onResume() {
         // Resume the data polling thread
-        dataThread = new Thread(data);
-        dataThread.start();
+        if(data != null) {
+            data.resume();
+        }
         super.onResume();
     }
 
