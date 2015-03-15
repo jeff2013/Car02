@@ -100,7 +100,7 @@ public class Fragment_section1 extends Fragment {
         mojioClient.get(Trip[].class, "Trips", queryParam, new MojioClient.ResponseListener<Trip[]>() {
             @Override
             public void onSuccess(Trip[] result) {
-                tripsC02 = result[result.length-1].Distance *result[result.length-1].getFuelEfficiency() *2.3035f;
+                tripsC02 = result[result.length-1].Distance *result[result.length-1].getFuelEfficiency() *2.3035f/100;
                 Toast.makeText(Fragment_section1.this.getActivity(), "OnSuccess Reached", Toast.LENGTH_SHORT).show();
                 textView_totalC02.setText(Float.toString(tripsC02) + " kgC02");
                 textView_totalC02.invalidate();

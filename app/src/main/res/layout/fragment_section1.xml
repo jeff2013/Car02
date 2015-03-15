@@ -27,7 +27,7 @@
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="50dp"
-                    android:background="@color/material_blue_grey_800"
+                    android:background="#1dac3b"
                     android:elevation="2dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
@@ -70,7 +70,7 @@
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="50dp"
-                    android:background="@color/material_blue_grey_800"
+                    android:background="#1dac3b"
                     android:elevation="2dp"
                     android:id="@+id/relativeLayout">
                     <TextView
@@ -109,7 +109,7 @@
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="50dp"
-                    android:background="@color/material_blue_grey_800"
+                    android:background="#1dac3b"
                     android:elevation="2dp">
                     <TextView
                         android:layout_width="wrap_content"

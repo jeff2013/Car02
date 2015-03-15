@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYStepMode;
 import com.example.jeff.car02.DynamicXYDataSource;
 import com.example.jeff.car02.MainActivity;
 import com.example.jeff.car02.R;
@@ -23,7 +24,10 @@ import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.models.Event;
 import com.mojio.mojiosdk.models.Trip;
 
+import java.text.FieldPosition;
+import java.text.Format;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,15 +110,53 @@ public class DynamicXYPlotFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dynamic_xyplot, container, false);
         // Get the plot instance
         dynamicPlot = (XYPlot) view.findViewById(R.id.XYPlot);
-        // Create our Plot Update Observer
+        dynamicPlot.setDomainValueFormat(new Format() {
+
+            private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+            @Override
+            public StringBuffer format(Object object, StringBuffer buffer, FieldPosition field) {
+                long timestamp = ((Number) object).longValue();
+                Date date = new Date(timestamp);
+                return dateFormat.format(date, buffer, field);
+            }
+
+            @Override
+            public Object parseObject(String string, ParsePosition position) {
+                return null;
+            }
+        });
+        dynamicPlot.setTicksPerRangeLabel(3);
+        dynamicPlot.getGraphWidget().setDomainLabelOrientation(-45);
+        dynamicPlot.getGraphWidget().setDomainLabelVerticalOffset(15f);
+        dynamicPlot.getGraphWidget().setPadding(10f, 10f, 50f, 60f);
+        view.setBackgroundColor(Color.WHITE);
+        Paint whitePaint = new Paint();
+        whitePaint.setColor(Color.WHITE);
+        Paint grayPaint = new Paint();
+        grayPaint.setColor(Color.LTGRAY);
+        Paint blackPaint = new Paint();
+        blackPaint.setAlpha(Color.BLACK);
+        dynamicPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.BLACK);
+        dynamicPlot.getGraphWidget().getRangeLabelPaint().setColor(Color.BLACK);
+        dynamicPlot.getGraphWidget().setBackgroundPaint(whitePaint);
+        dynamicPlot.setBackgroundPaint(whitePaint);
+        dynamicPlot.getLegendWidget().setTextPaint(blackPaint);
+        dynamicPlot.getLegendWidget().setDrawIconBorderEnabled(false);
+        dynamicPlot.getLegendWidget().setBackgroundPaint(whitePaint);
+        dynamicPlot.getLegendWidget().setBorderPaint(whitePaint);
+        dynamicPlot.getGraphWidget().setGridBackgroundPaint(whitePaint);
+        dynamicPlot.getGraphWidget().setDomainGridLinePaint(whitePaint);
+        dynamicPlot.getGraphWidget().setRangeGridLinePaint(grayPaint);
+                // Create our Plot Update Observer
         plotUpdater = new DynamicXYPlotUpdater(dynamicPlot);
         // Set up formatting junk
         format = new LineAndPointFormatter();
         format.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
-        format.getLinePaint().setStrokeWidth(10);
-        format.getLinePaint().setColor(Color.rgb(0x38, 0x9C, 0xFF));
+        format.getLinePaint().setStrokeWidth(3);
+        format.getLinePaint().setColor(Color.rgb(0x1d, 0xac, 0x3b));
         format.getFillPaint().setAlpha(0x00);
-        //format.getVertexPaint().setAlpha(0x00);
+        format.getVertexPaint().setAlpha(0x00);
         // Create a set of query options
         StaticXYDataSource data = new StaticXYDataSource(mMojio, getActivity());
         setDataSource(data);

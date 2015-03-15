@@ -104,7 +104,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     private void getCurrentUser() {
         String entityPath = "Users"; // TODO need userID?
-        HashMap<String, String> queryParams = new HashMap<>();
+        HashMap<String, String> queryParams = new HashMap();
 
         mMojio.get(User[].class, entityPath, queryParams, new MojioClient.ResponseListener<User[]>() {
             @Override
@@ -112,8 +112,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 // Should have one result
                 try {
                     mCurrentUser = result[0]; // Save user info so we can use ID later
-
-                    Toast.makeText(MainActivity.this, mCurrentUser.FirstName, Toast.LENGTH_LONG).show();
 
                     // Show user data
                    /*
@@ -297,10 +295,4 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             return null;
         }
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-
-
 }
