@@ -4,20 +4,31 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
 import com.example.jeff.car02.DynamicXYDataSource;
+import com.example.jeff.car02.MainActivity;
 import com.example.jeff.car02.R;
 import com.example.jeff.car02.StaticXYDataSource;
 import com.example.jeff.car02.TestDynamicXYDataSource;
+import com.mojio.mojiosdk.MojioClient;
+import com.mojio.mojiosdk.models.Event;
+import com.mojio.mojiosdk.models.Trip;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -41,7 +52,7 @@ public class DynamicXYPlotFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private DynamicXYPlotUpdater plotUpdater;
     private LineAndPointFormatter format;
-    private boolean isDynamic;
+    private MojioClient mMojio;
 
     // Used to get updates from the data source
     private class DynamicXYPlotUpdater implements Observer {
@@ -103,17 +114,62 @@ public class DynamicXYPlotFragment extends Fragment {
         format.getLinePaint().setStrokeWidth(10);
         format.getLinePaint().setColor(Color.rgb(0x38, 0x9C, 0xFF));
         format.getFillPaint().setAlpha(0x00);
-        format.getVertexPaint().setAlpha(0x00);
-        // This is for debug purposes, create a test data source
-        //TODO: Remove debug stuffs
-        ArrayList<Pair<Number, Number>> nums = new ArrayList<Pair<Number, Number>>();
-        nums.add(new Pair<Number, Number>(1, 1));
-        nums.add(new Pair<Number, Number>(2, 2));
-        StaticXYDataSource data = new StaticXYDataSource(nums);
-        setDataSource(data);
+        Map<String, String> queryParam = new HashMap();
+        queryParam.put("limit", "1000");
+        queryParam.put("offset", "0");
+        mMojio.get(Trip[].class, "Trips", queryParam, new MojioClient.ResponseListener<Trip[]>() {
+            @Override
+            public void onSuccess(Trip[] tripResult) {
+                Trip latestTrip = tripResult[tripResult.length - 1];
+                Map<String, String> queryParam = new HashMap();
+                queryParam.put("limit", "1000");
+                queryParam.put("offset", "0");
+                queryParam.put("id", latestTrip._id);
+                mMojio.get(Event[].class, "Trips/"+latestTrip._id+"/Events", queryParam, new MojioClient.ResponseListener<Event[]>() {
+                    @Override
+                    public void onSuccess(Event[] result) {
+                        // Generate a set of XY values
+                        ArrayList<Pair<Number, Number>> pairs = new ArrayList();
+                        float prevDist = 0;
+                        int count = 0;
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                        for(int i = 1; i < result.length - 1; i++) {
+                            Date prevd = new Date();
+                            Date d = new Date();
+                            try {
+                                d = dateFormatter.parse(result[i].Time);
+                                prevd = dateFormatter.parse(result[i-1].Time);
+                            } catch (ParseException e) {
+                                Toast.makeText(DynamicXYPlotFragment.this.getActivity(), "Parse Error", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+                            float distance = prevDist + result[i].Speed*(d.getTime()-prevd.getTime())/(60*60*1000);
+                            float deltaFuel = distance*result[i].FuelEfficiency - prevDist*result[i-1].FuelEfficiency;
+                            float DeltaCO2 = (deltaFuel*2.3035f/10)/(d.getTime() - prevd.getTime());
+                            float totalCO2 = distance*result[i].FuelEfficiency*2.3035f;
+
+                            pairs.add(new Pair<Number, Number>(d.getTime(), DeltaCO2));
+                            prevDist = distance;
+                        }
+                        StaticXYDataSource data = new StaticXYDataSource(pairs);
+                        setDataSource(data);
+                        enableDataSource();
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+
+                    }
+                });
+            }
+
+            public void onFailure(String error) {
+                Log.d("Mojio API Error", error);
+            }
+
+        });
         return view;
     }
-
 
     @Override
     public void onResume() {
@@ -143,20 +199,18 @@ public class DynamicXYPlotFragment extends Fragment {
      * @param data
      */
     public void setDataSource(DynamicXYDataSource data) {
-        if(this.data != null) {
-            // Unregister the plot from the old data
-            this.data.deleteObserver(plotUpdater);
-            dynamicPlot.removeSeries(data);
-        }
-        data.terminate();
-        // Change our data set
         this.data = data;
-        // Register with the new data
+    }
+
+    public void enableDataSource() {
         dynamicPlot.addSeries(this.data, format);
         this.data.addObserver(plotUpdater);
-        // Start the polling thread
         dataThread = new Thread(data);
         dataThread.start();
+    }
+
+    public void setMojioClient(MojioClient m) {
+        mMojio = m;
     }
 
     /**
