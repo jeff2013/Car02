@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.Fragments.Fragment_section1;
 import com.example.jeff.car02.Fragments.Fragment_section2;
 import com.mojio.mojiosdk.MojioClient;
@@ -259,9 +260,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     position_fragment = new DynamicXYPlotFragment();
                     break;
                 case 1:
-                    position_fragment = new Fragment_section2();
+                    position_fragment = new Fragment_section1();
                     break;
                 case 2:
+                    position_fragment = new Fragment_section2();
                     break;
                 default:
                     position_fragment = new Fragment_section2();
