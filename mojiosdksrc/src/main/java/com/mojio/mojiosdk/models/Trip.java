@@ -1,5 +1,7 @@
 package com.mojio.mojiosdk.models;
 
+import java.util.Objects;
+
 public class Trip {
 
     public String MojioId;
@@ -16,7 +18,7 @@ public class Trip {
     public float Distance;
     public Object StartLocation;
     public Object LastKnownLocation;
-    public Object EndLocation;
+    public Objects EndLocation;
     public Object StartAddress;
     public Object EndAddress;
     public boolean ForcefullyEnded;

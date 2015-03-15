@@ -133,7 +133,7 @@ public class Fragment_section3 extends SupportMapFragment {
             }
         });*/
 
-        dataSource = new TestDynamicXYDataSource(1000,mMojio);
+        dataSource = new TestDynamicXYDataSource(1000, mMojio);
         dataSource.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {
@@ -142,27 +142,31 @@ public class Fragment_section3 extends SupportMapFragment {
                 float maxData = dataSource.getMaxY();
 
                 map.clear();
+                if(dataSource.getLocations().isEmpty())
+                    return;
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                for(int i=0;i<dataSource.size()&&i<positions.size();++i){
+                for (int i = 0; i < dataSource.size() && i < positions.size(); ++i) {
                     MarkerOptions opt = new MarkerOptions();
 
                     opt.draggable(false);
                     opt.position(positions.get(i));
                     opt.flat(true);
-                    float normalisedData = dataSource.getY(i).floatValue()/maxData;
-                    float colour = (BitmapDescriptorFactory.HUE_RED-BitmapDescriptorFactory.HUE_BLUE)*normalisedData +BitmapDescriptorFactory.HUE_BLUE;
-                    colour = colour>359?359:colour;
-                    colour= colour<0?0:colour;
+                    float normalisedData = dataSource.getY(i).floatValue() / maxData;
+                    float colour = (BitmapDescriptorFactory.HUE_RED - BitmapDescriptorFactory.HUE_BLUE) * normalisedData + BitmapDescriptorFactory.HUE_BLUE;
+                    colour = colour > 359 ? 359 : colour;
+                    colour = colour < 0 ? 0 : colour;
                     opt.icon(BitmapDescriptorFactory.defaultMarker(colour));
                     builder.include(positions.get(i));
                     map.addMarker(opt);
                 }
 
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(),100));
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
             }
         });
+        Thread dataThread = new Thread(dataSource);
+        dataThread.start();
 
         return tmp;
     }

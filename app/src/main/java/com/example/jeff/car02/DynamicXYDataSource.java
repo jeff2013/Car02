@@ -63,6 +63,7 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
      */
     public DynamicXYDataSource(int updateInterval) {
         XYVals = new ArrayList<Pair<Number, Number>>();
+        locations = new ArrayList<LatLng>();
         notifier = new MyObservable();
         this.updateInterval = updateInterval;
     }
