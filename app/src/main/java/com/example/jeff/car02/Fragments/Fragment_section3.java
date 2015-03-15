@@ -14,6 +14,7 @@ import com.example.jeff.car02.StaticXYDataSource;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -65,6 +66,9 @@ public class Fragment_section3 extends SupportMapFragment {
                         LatLng prevLatLng = null;
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
                         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                        float maxData= 0;
+                        ArrayList<Float> points = new ArrayList<Float>();
+                        ArrayList<LatLng> positions = new ArrayList<LatLng>();
                         for (int i = 1; i < result.length - 1; i++) {
                             Date prevd = new Date();
                             Date d = new Date();
@@ -83,15 +87,23 @@ public class Fragment_section3 extends SupportMapFragment {
                             prevDist = distance;
 
                             if(!result[i].Location.IsValid) continue;
-
-                            MarkerOptions opt = new MarkerOptions();
+                            maxData = DeltaCO2>maxData?DeltaCO2:maxData;
+                            points.add(DeltaCO2);
                             LatLng latlng = new LatLng(result[i].Location.Lat,result[i].Location.Lng);
-                            opt.draggable(false);
-                            opt.position(new LatLng(result[i].Location.Lat,result[i].Location.Lng));
-                            opt.flat(true);
-
+                            positions.add(latlng);
                             builder.include(latlng);
+                        }
 
+                        for(int i=0;i<points.size()&&i<positions.size();++i){
+                            MarkerOptions opt = new MarkerOptions();
+
+                            opt.draggable(false);
+                            opt.position(positions.get(i));
+                            opt.flat(true);
+                            float normalisedData = points.get(i)/maxData;
+                            float colour = (BitmapDescriptorFactory.HUE_RED-BitmapDescriptorFactory.HUE_BLUE)*normalisedData +BitmapDescriptorFactory.HUE_BLUE;
+                            colour = colour>360?360:colour;
+                            opt.icon(BitmapDescriptorFactory.defaultMarker(colour));
                             map.addMarker(opt);
                         }
 
