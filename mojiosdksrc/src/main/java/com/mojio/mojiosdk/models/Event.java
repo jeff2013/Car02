@@ -14,6 +14,9 @@ public class Event {
     public boolean TimeIsApprox;
     public boolean BatteryVoltage;
     public boolean ConnectionLost;
+    public float FuelEfficiency;
+    public float Distance;
+    public float Speed;
     public String _id;
 
     public Diagnostics[] DTCs;

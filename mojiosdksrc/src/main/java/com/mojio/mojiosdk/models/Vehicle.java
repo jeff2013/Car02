@@ -86,4 +86,8 @@ public class Vehicle {
         }
         return 0;
     }
+
+    public Trip getLastTripDetails() {
+        return LastTripDetails;
+    }
 }

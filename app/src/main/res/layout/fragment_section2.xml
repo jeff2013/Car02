@@ -2,9 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.example.jeff.car02.Fragments.Fragment_section2">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/fragment2"
-        android:textSize="50sp"/>
+    <com.google.android.gms.maps.MapView android:id="@+id/MapView" android:layout_width="match_parent" android:layout_height="match_parent" />
 
 </FrameLayout>

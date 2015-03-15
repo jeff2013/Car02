@@ -29,4 +29,13 @@ public class Trip {
 	public Trip(){
 		
 	}
+
+    public float getFuelEfficiency() {
+        return FuelEfficiency;
+    }
+
+    public float getDistance() {
+        return Distance;
+    }
+
 }

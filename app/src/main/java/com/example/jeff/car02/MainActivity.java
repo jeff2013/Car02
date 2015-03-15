@@ -3,6 +3,7 @@ package com.example.jeff.car02;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +27,10 @@ import android.widget.Toast;
 import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.Fragments.Fragment_section1;
 import com.example.jeff.car02.Fragments.Fragment_section2;
+import com.example.jeff.car02.Fragments.Fragment_section3;
+import com.google.android.gms.maps.MapFragment;
 import com.mojio.mojiosdk.MojioClient;
+import com.mojio.mojiosdk.models.Event;
 import com.mojio.mojiosdk.models.User;
 import com.mojio.mojiosdk.models.Vehicle;
 
@@ -52,20 +57,19 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private final static String SECRET_KEY= "872bca1d-9a0c-4ad4-932b-3b696658df55";
     private static int OAUTH_REQUEST = 0;
 
-    // The main mojio client object; allows l ogin and data retrieval to occur.
+    // The main mojio client object; allows login and data retrieval to occur.
     private MojioClient mMojio;
 
 
     private User mCurrentUser;
     private Vehicle[] mUserVehicles;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMojio = new MojioClient(this, MOJIO_APP_ID, SECRET_KEY, REDIRECT_URL);
-        doOauth2Login();
-
+        mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
+        if(!mMojio.isUserLoggedIn()) doOauth2Login();
+        else successful_Login();
     }
 
     @Override
@@ -127,7 +131,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     // Now that we have the current user, we can use their ID to get data
     private void getUserVehicles() {
         String entityPath = String.format("Users/%s/Vehicles", mCurrentUser._id);
-        HashMap<String, String> queryParams = new HashMap<>();
+        HashMap<String, String> queryParams = new HashMap();
         queryParams.put("sortBy", "Name");
         queryParams.put("desc", "true");
 
@@ -258,13 +262,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch(position){
                 case 0:
                     position_fragment = new DynamicXYPlotFragment();
+                    ((DynamicXYPlotFragment)position_fragment).setMojioClient(mMojio);
                     break;
                 case 1:
-                    position_fragment = new Fragment_section1();
-                    break;
-                case 2:
                     position_fragment = new Fragment_section2();
                     break;
+                case 2:
+                    position_fragment = new Fragment_section3();
                 default:
                     position_fragment = new Fragment_section2();
                     break;
