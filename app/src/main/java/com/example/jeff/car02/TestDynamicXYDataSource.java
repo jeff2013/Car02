@@ -1,5 +1,6 @@
 package com.example.jeff.car02;
 
+import android.app.Activity;
 import android.util.Log;
 import android.util.Pair;
 
@@ -32,8 +33,8 @@ public class TestDynamicXYDataSource extends DynamicXYDataSource {
      * Pass along params to the superclass
      * @param updateInterval
      */
-    public TestDynamicXYDataSource(int updateInterval, MojioClient m) {
-        super(updateInterval);
+    public TestDynamicXYDataSource(int updateInterval, MojioClient m, Activity activity) {
+        super(updateInterval, activity);
         this.mojio = m;
     }
 

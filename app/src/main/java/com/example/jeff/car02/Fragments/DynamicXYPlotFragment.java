@@ -116,8 +116,7 @@ public class DynamicXYPlotFragment extends Fragment {
         format.getFillPaint().setAlpha(0x00);
         //format.getVertexPaint().setAlpha(0x00);
         // Create a set of query options
-        //StaticXYDataSource data = new StaticXYDataSource(mMojio);
-        TestDynamicXYDataSource data = new TestDynamicXYDataSource(1000, mMojio);
+        StaticXYDataSource data = new StaticXYDataSource(mMojio, getActivity());
         setDataSource(data);
         enableDataSource();
         return view;

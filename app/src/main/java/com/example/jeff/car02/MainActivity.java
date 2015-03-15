@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -28,6 +30,7 @@ import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.Fragments.Fragment_section1;
 import com.example.jeff.car02.Fragments.Fragment_section2;
 import com.example.jeff.car02.Fragments.Fragment_section3;
+import com.example.jeff.car02.Fragments.Fragment_section4;
 import com.google.android.gms.maps.MapFragment;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.models.Event;
@@ -46,9 +49,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
+    public static final String graphData = "Graph Number";
+    SharedPreferences sharedPreferences;
 
     /**
-     * The {@link ViewPager} that will host the section contents.
+     * The {@link ViewPager} that will host the sectiographn contents.
      */
     ViewPager mViewPager;
 
@@ -67,6 +72,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences(graphData, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("Data", 0).apply();
         mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
         if(!mMojio.isUserLoggedIn()) doOauth2Login();
         else successful_Login();
@@ -143,21 +150,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 if (mUserVehicles.length == 0) {
                     Toast.makeText(MainActivity.this, "No vehicles found", Toast.LENGTH_LONG).show();
                 }
-
-                // Create list data from result
-               /* ArrayList<String> listData = new ArrayList<String>();
-                Vehicle v;
-                for (int i=0; i < mUserVehicles.length; i++) {
-                    v = result[i];
-                    listData.add(String.format("%s %s", v.getNameDescription(), v.LicensePlate));
-                }
-
-                // Show result in list
-                ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, listData);
-                mVehicleList.setAdapter(itemsAdapter);
-
-                //putVehiclesOnMap();
-                */
             }
 
             @Override

@@ -133,7 +133,7 @@ public class Fragment_section3 extends SupportMapFragment {
             }
         });*/
 
-        dataSource = new TestDynamicXYDataSource(1000, mMojio);
+        dataSource = new TestDynamicXYDataSource(1000, mMojio, getActivity());
         dataSource.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {

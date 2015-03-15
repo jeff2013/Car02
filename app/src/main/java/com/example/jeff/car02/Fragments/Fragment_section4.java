@@ -1,12 +1,16 @@
 package com.example.jeff.car02.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.jeff.car02.R;
 
@@ -29,6 +33,17 @@ public class Fragment_section4 extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+
+    private SharedPreferences sharedPreferences;
+    public static final String graphData = "Graph Number";
+
+    private Button btn_ChangeC02Emissions;
+    private Button btn_TotalC02Emissions;
+    private Button btn_DistanceTraveled;
+    private Button btn_ChangeInFuel;
+    private Button btn_fuelEfficiency;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -59,30 +74,64 @@ public class Fragment_section4 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        sharedPreferences = getActivity().getSharedPreferences(graphData, Context.MODE_PRIVATE);
+
+
+        Toast.makeText(getActivity(), "HELLO", Toast.LENGTH_SHORT).show();
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_section4, container, false);
+        View v =inflater.inflate(R.layout.fragment_section4, container, false);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        btn_ChangeC02Emissions  = (Button) v.findViewById(R.id.btn_C02Emissions);
+        btn_ChangeC02Emissions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putInt("Data", 1).apply();
+                Toast.makeText(getActivity(), "HELLO", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btn_TotalC02Emissions  = (Button) v.findViewById(R.id.btn_TotalC02Emissions);
+        btn_TotalC02Emissions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putInt("Data", 0).apply();
+                Toast.makeText(getActivity(), Integer.toString(sharedPreferences.getInt("Data", 0)), Toast.LENGTH_SHORT).show();
+            }
+        });
+        btn_DistanceTraveled  = (Button) v.findViewById(R.id.btn_DistanceTraveled);
+        btn_DistanceTraveled.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putInt("Data", 3).apply();
+            }
+        });
+        btn_ChangeInFuel  = (Button) v.findViewById(R.id.btn_ChangeInFuel);
+        btn_ChangeInFuel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putInt("Data", 4).apply();
+            }
+        });
+        btn_fuelEfficiency  = (Button) v.findViewById(R.id.btn_fuelEfficiency);
+        btn_fuelEfficiency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putInt("Data", 2).apply();
+            }
+        });
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
     }
 

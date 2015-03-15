@@ -1,5 +1,7 @@
 package com.example.jeff.car02;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
@@ -25,11 +27,15 @@ import java.util.Observer;
  */
 public class StaticXYDataSource extends DynamicXYDataSource {
 
+    private SharedPreferences sharedPreferences;
+    public static final String graphData = "Graph Number";
+    public int num;
+
     private MojioClient mojioClient;
 
-    public StaticXYDataSource(MojioClient m) {
+    public StaticXYDataSource(MojioClient m, Activity activity) {
         // Tell the thread to never run, because the data source is static
-        super(0);
+        super(0, activity);
         this.mojioClient = m;
         // Set the data to the stored data
     }
@@ -98,7 +104,8 @@ public class StaticXYDataSource extends DynamicXYDataSource {
                             float deltaCO2 = (deltaFuel * 2.3035f * 100) / (d.getTime() - prevd.getTime());
                             float totalCO2 = distance * result[i].FuelEfficiency * 2.3035f * 100;
                             // Switch on which values to display
-                            int selector = 0;
+                            int selector = StaticXYDataSource.super.getPreference();
+                            if(true) forceDataRefresh();
                             switch (selector) {
                                 case 0:
                                     vals.add(new Pair<Number, Number>(d.getTime(), totalCO2));

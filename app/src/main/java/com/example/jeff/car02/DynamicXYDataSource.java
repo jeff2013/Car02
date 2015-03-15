@@ -1,5 +1,8 @@
 package com.example.jeff.car02;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Pair;
 
 import com.androidplot.xy.XYSeries;
@@ -57,14 +60,17 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
      */
     protected int updateInterval;
 
+    private Activity activity;
+
     /**
      * Creates a data source with an update interval in milliseconds
      * @param updateInterval
      */
-    public DynamicXYDataSource(int updateInterval) {
+    public DynamicXYDataSource(int updateInterval, Activity activity) {
         XYVals = new ArrayList<Pair<Number, Number>>();
         locations = new ArrayList<LatLng>();
         notifier = new MyObservable();
+        this.activity = activity;
         this.updateInterval = updateInterval;
     }
 
@@ -87,6 +93,10 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getPreference(){
+        return activity.getSharedPreferences("Graph Number", Context.MODE_PRIVATE).getInt("Data", 0);
     }
 
     public void terminate() {
