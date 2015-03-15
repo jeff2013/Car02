@@ -41,12 +41,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private final static String REDIRECT_URL = "myfirstmojio://"; // Example "myfirstmojio://"
     private static int OAUTH_REQUEST = 0;
 
-    // The main mojio client object; allows l ogin and data retrieval to occur.
+    private String userName;
+
+    // The main mojio client object; allows login and data retrieval to occur.
     private MojioClient mMojio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        savedInstanceState.getString("CarO2_UserName",null);
         mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
         if(!mMojio.isUserLoggedIn()) doOauth2Login();
         else successful_Login();
@@ -59,6 +62,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             if (resultCode == RESULT_OK) {
                 Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_LONG).show();
                 //getCurrentUser(); // Now attempt to get user info
+                userName = data.getStringExtra("CarO2_UserName");
                 successful_Login();
             }
             else {
