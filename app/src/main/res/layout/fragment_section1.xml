@@ -3,8 +3,124 @@
     android:layout_height="match_parent" tools:context="com.example.jeff.car02.Fragments.Fragment_section1">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/fragment1"
-        android:textSize="50sp"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/background_floating_material_light"
+                android:elevation="2dp">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/material_blue_grey_800"
+                    android:elevation="2dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Last trips C02 emissions"
+                        android:textColor="@color/abc_primary_text_material_dark"
+                        android:id="@+id/textView"
+                        android:gravity="end"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="10dp" />
+                    </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Test"
+                    android:textSize="50sp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/background_floating_material_light"
+                android:elevation="2dp">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/material_blue_grey_800"
+                    android:elevation="2dp"
+                    android:id="@+id/relativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fuel Efficiency"
+                        android:textColor="@color/abc_primary_text_material_dark"
+                        android:gravity="end"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="10dp" />
+                    </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:textSize="50sp"
+                    android:id="@+id/textView2"
+                    android:layout_below="@+id/relativeLayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="58dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/background_floating_material_light"
+                android:elevation="2dp">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/material_blue_grey_800"
+                    android:elevation="2dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Card3"
+                        android:textColor="@color/abc_primary_text_material_dark"
+                        android:gravity="end"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="10dp" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
