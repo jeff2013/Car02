@@ -269,9 +269,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     break;
                 case 2:
                     position_fragment = new Fragment_section3();
+                    ((Fragment_section3)position_fragment).setMojioClient(mMojio);
                     break;
                 default:
                     position_fragment = new Fragment_section2();
+
                     break;
             }
             return position_fragment;
