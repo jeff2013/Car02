@@ -2,13 +2,11 @@ package com.example.jeff.car02;
 
 import android.util.Pair;
 
-import com.example.jeff.car02.XYDataSource;
-
 /**
  * Created by reed on 3/14/15.
  * This is an example of an implementation of XYData Source
  */
-public class TestXYDataSource extends XYDataSource {
+public class TestDynamicXYDataSource extends DynamicXYDataSource {
 
     /**
      * These are used to store generated values
@@ -19,7 +17,7 @@ public class TestXYDataSource extends XYDataSource {
      * Pass along params to the superclass
      * @param updateInterval
      */
-    public TestXYDataSource(int updateInterval) {
+    public TestDynamicXYDataSource(int updateInterval) {
         super(updateInterval);
     }
 

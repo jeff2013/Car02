@@ -29,8 +29,12 @@ import java.util.Map;
 public class MojioClient {
 
     // Static
+    //TODO
+    //URL_AUTH_PATH is the authentication path for either the live mojio or the sandbox version.
+    //https://api.moj.io/OAuth2Sandbox/authorize?response_type=token&client_id=%s is for sandbox
+    //https://api.moj.io/OAuth2/authorize?response_type=token&client_id=%s is for live server
     private static String REQUEST_TAG = "MojioRequest";
-    private static String URL_AUTH_PATH = "https://api.moj.io/OAuth2/authorize?response_type=token&client_id=%s";
+    private static String URL_AUTH_PATH = "https://api.moj.io/OAuth2Sandbox/authorize?response_type=token&client_id=%s";
 
     // Config
     private String _apiBaseUrl = "https://api.moj.io/v1/"; // Default
