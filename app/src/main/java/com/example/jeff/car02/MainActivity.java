@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.Fragments.Fragment_section1;
 import com.example.jeff.car02.Fragments.Fragment_section2;
+import com.example.jeff.car02.Fragments.Fragment_section3;
+import com.google.android.gms.maps.MapFragment;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.models.Event;
 import com.mojio.mojiosdk.models.User;
@@ -55,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private final static String SECRET_KEY= "872bca1d-9a0c-4ad4-932b-3b696658df55";
     private static int OAUTH_REQUEST = 0;
 
-    // The main mojio client object; allows l ogin and data retrieval to occur.
+    // The main mojio client object; allows login and data retrieval to occur.
     private MojioClient mMojio;
 
 
@@ -65,9 +67,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMojio = new MojioClient(this, MOJIO_APP_ID, SECRET_KEY, REDIRECT_URL);
-        doOauth2Login();
-
+        mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
+        if(!mMojio.isUserLoggedIn()) doOauth2Login();
+        else successful_Login();
     }
 
     @Override
@@ -266,7 +268,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     position_fragment = new Fragment_section2();
                     break;
                 case 2:
-                    break;
+                    position_fragment = new Fragment_section3();
                 default:
                     position_fragment = new Fragment_section2();
                     break;
