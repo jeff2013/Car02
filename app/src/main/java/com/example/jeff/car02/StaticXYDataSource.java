@@ -40,10 +40,6 @@ public class StaticXYDataSource extends DynamicXYDataSource {
         // Set the data to the stored data
     }
 
-    public String getTitle() {
-        return "Static Data Source";
-    }
-
     @Override
     public void addObserver(Observer obs) {
         super.addObserver(obs);

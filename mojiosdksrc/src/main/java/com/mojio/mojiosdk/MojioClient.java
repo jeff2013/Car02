@@ -197,7 +197,7 @@ public class MojioClient {
     private void getUser(String userID, final MojioClient.ResponseListener<User> responseListener) {
         // TODO Check cache?
         String entityPath = "Users/" + userID;
-        HashMap<String, String> queryParams = new HashMap<>();
+        HashMap<String, String> queryParams = new HashMap();
         this.get(User.class, entityPath, queryParams, responseListener);
     }
 

@@ -27,6 +27,7 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
     protected ArrayList<Pair<Number, Number>> XYVals;
     protected ArrayList<LatLng> locations;
     private boolean isRunning;
+    private String title= "";
 
     /**
      * Used to handle observation stuffs
@@ -37,6 +38,10 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
             setChanged();
             super.notifyObservers();
         }
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public float getMaxY(){
@@ -96,14 +101,32 @@ public abstract class DynamicXYDataSource implements Runnable, XYSeries {
     }
 
     public int getPreference(){
-        return activity.getSharedPreferences("Graph Number", Context.MODE_PRIVATE).getInt("Data", 0);
+        int pref = activity.getSharedPreferences("Graph Number", Context.MODE_PRIVATE).getInt("Data", 0);
+        switch (pref) {
+            case 0:
+                title = "Total CO2 Output";
+                break;
+            case 1:
+                title = "Delta CO2";
+                break;
+            case 2:
+                title = "Fuel Efficiency";
+                break;
+            case 3:
+                title = "Distance Traveled";
+                break;
+            case 4:
+                title = "Delta Fuel";
+                break;
+        }
+        return pref;
     }
 
     public void terminate() {
         isRunning = false;
     }
 
-    public void resume() { isRunning = true; }
+    public void resume() { isRunning = updateInterval > 0; }
     /**
      * Add an observer to the data
      * @param obs

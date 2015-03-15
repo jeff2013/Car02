@@ -39,14 +39,6 @@ public class TestDynamicXYDataSource extends DynamicXYDataSource {
     }
 
     /**
-     * get the graph title
-     * @return
-     */
-    public String getTitle() {
-        return "TEST TITLE";
-    }
-
-    /**
      * This method is used to get our data, and store it
      */
     public void getData() {
