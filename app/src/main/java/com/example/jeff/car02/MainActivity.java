@@ -63,12 +63,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      */
     ViewPager mViewPager;
 
-    //Login page widgets
+    /**these are the old bitmap activity_login2 layout objects
     Button btn_login;
     Bitmap bitmap;
     Bitmap bitmap_pressed;
     Button activeButton = null;
     int i = 0;
+     */
+
+    //Login objects
+    Button loginButton;
+
     //Mojio keys/codes
 
     private final static String MOJIO_APP_ID = "ddf63e97-865a-4b95-8e2f-d414d8e2d5b1";
@@ -120,8 +125,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         if(hasvalidConnection()){
             mMojio.launchLoginActivity(this, OAUTH_REQUEST);
         }else {
-            View loginView = View.inflate(this, R.layout.activity_login2, null);
-            bitmapTouchSetUp(loginView);
+            View loginView = View.inflate(this, R.layout.activity_login_simple, null);
+            //bitmapTouchSetUp(loginView);
             View decorView = getWindow().getDecorView();
             // Hide the status bar.
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -131,10 +136,26 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             ActionBar actionBar = getSupportActionBar();
             actionBar.hide();
             setContentView(loginView);
+            loginSetUp(loginView);
         }
     }
+
+    public void loginSetUp(View loginView){
+        loginButton = (Button) loginView.findViewById(R.id.btn_loginMojio);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hasvalidConnection()){
+                    mMojio.launchLoginActivity(MainActivity.this, OAUTH_REQUEST);
+                }else{
+                    Toast.makeText(MainActivity.this, "Please aquire internet access", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     //Sets up the touch functionality of the login button bitmap while resizing the bitmap by calling getResizedBitmap
-    public void bitmapTouchSetUp(View loginView){
+    /*public void bitmapTouchSetUp(View loginView){
         bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttonbitmap);
         bitmap_pressed = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttongraphic);
 
@@ -146,7 +167,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         bitmap = getResizedBitmap(bitmap, height-height/4, width);
         bitmap_pressed = getResizedBitmap(bitmap_pressed,height-height/4, width);
         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-        //RippleDrawable.createRipple
         BitmapDrawable bitmapDrawable_pressed = new BitmapDrawable(getResources(), bitmap_pressed);
         btn_login = (Button) loginView.findViewById(R.id.btn_login);
         activeButton = btn_login;
@@ -197,6 +217,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         } else {
             activeButton.setSelected(true);
             activeButton.setPressed(true);
+            //RippleDrawable drawable = (RippleDrawable) activeButton.getBackground();
+            //drawable.setVisible(true, true);
         }
     }
 
@@ -226,6 +248,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
+    */
 
 
     private boolean hasvalidConnection(){
