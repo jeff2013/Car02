@@ -4,35 +4,25 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Pair;
-import android.view.LayoutInflater;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYStepMode;
-import com.example.jeff.car02.DynamicXYDataSource;
-import com.example.jeff.car02.MainActivity;
+import com.androidplot.xy.XYSeries;
+import com.example.jeff.car02.DataSource.DataSource;
+import com.example.jeff.car02.DataSource.StaticXYDataSource;
+import com.example.jeff.car02.DataSource.DyanmicXYDataSource;
 import com.example.jeff.car02.R;
-import com.example.jeff.car02.StaticXYDataSource;
-import com.example.jeff.car02.TestDynamicXYDataSource;
 import com.mojio.mojiosdk.MojioClient;
-import com.mojio.mojiosdk.models.Event;
-import com.mojio.mojiosdk.models.Trip;
 
 import java.text.FieldPosition;
 import java.text.Format;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -51,12 +41,13 @@ public class DynamicXYPlotFragment extends Fragment {
      * The XY Plot instance
      */
     private XYPlot dynamicPlot;
-    private DynamicXYDataSource data;
+    private DataSource data;
     private Thread dataThread;
     private OnFragmentInteractionListener mListener;
     private DynamicXYPlotUpdater plotUpdater;
     private LineAndPointFormatter format;
     private MojioClient mMojio;
+    private StaticXYDataSource d;
 
     // Used to get updates from the data source
     private class DynamicXYPlotUpdater implements Observer {
@@ -157,8 +148,8 @@ public class DynamicXYPlotFragment extends Fragment {
         format.getLinePaint().setColor(Color.rgb(0x1d, 0xac, 0x3b));
         format.getFillPaint().setAlpha(0x00);
         format.getVertexPaint().setAlpha(0x00);
-        // Create a set of query options
-        TestDynamicXYDataSource data = new TestDynamicXYDataSource(100, mMojio, getActivity());
+        // Set up a data source
+        this.data = new DyanmicXYDataSource(mMojio, 500);
         setDataSource(data);
         enableDataSource();
         return view;
@@ -168,7 +159,7 @@ public class DynamicXYPlotFragment extends Fragment {
     public void onResume() {
         // Resume the data polling thread
         if(data != null) {
-            data.resume();
+            data.resumeExecution();
         }
         super.onResume();
     }
@@ -177,7 +168,7 @@ public class DynamicXYPlotFragment extends Fragment {
     public void onPause() {
         // If we have a data source, terminate it
         if(data != null) {
-            data.terminate();
+            data.pauseExecution();
         }
         super.onPause();
     }
@@ -192,12 +183,15 @@ public class DynamicXYPlotFragment extends Fragment {
      * Changes the data source
      * @param data
      */
-    public void setDataSource(DynamicXYDataSource data) {
+    public void setDataSource(DataSource data) {
         this.data = data;
     }
 
     public void enableDataSource() {
-        dynamicPlot.addSeries(this.data, format);
+        // Add the data as a series
+        // Don't attempt to use a non XYSeries DataSource
+        dynamicPlot.addSeries((XYSeries) this.data, format);
+        // Add the observer
         this.data.addObserver(plotUpdater);
         dataThread = new Thread(data);
         dataThread.start();

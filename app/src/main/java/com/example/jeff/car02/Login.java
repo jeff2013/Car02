@@ -39,7 +39,7 @@ public class Login extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
-        mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
+        //mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
         loginButton = (Button) this.findViewById(R.id.btn_login);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -128,7 +128,7 @@ public class MojioRequest<T> extends Request<T> {
         this.contentBody = imageEncoded;
     }
 
-    private void commonInit(Context appContext,
+    protected void commonInit(Context appContext,
                             int method,
                             String url,
                             Class<T> clazz,

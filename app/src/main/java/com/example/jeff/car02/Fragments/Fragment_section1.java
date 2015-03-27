@@ -1,6 +1,5 @@
 package com.example.jeff.car02.Fragments;
 
-import android.app.Activity;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -88,7 +87,7 @@ public class Fragment_section1 extends Fragment {
         textView_totalC02 = (TextView) v.findViewById(R.id.textview_C02);
         textView_FuelEfficiency = (TextView) v.findViewById(R.id.textview_FuelEfficiency);
         textView_DistanceTraveled = (TextView) v.findViewById(R.id.textView_DistanceTraveled);
-        recieveData();
+        //recieveData();
         return v;
     }
 

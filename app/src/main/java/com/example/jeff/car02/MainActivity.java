@@ -1,29 +1,18 @@
 package com.example.jeff.car02;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
@@ -31,11 +20,12 @@ import com.example.jeff.car02.Fragments.Fragment_section1;
 import com.example.jeff.car02.Fragments.Fragment_section2;
 import com.example.jeff.car02.Fragments.Fragment_section3;
 import com.example.jeff.car02.Fragments.Fragment_section4;
-import com.google.android.gms.maps.MapFragment;
 import com.mojio.mojiosdk.MojioClient;
-import com.mojio.mojiosdk.models.Event;
 import com.mojio.mojiosdk.models.User;
 import com.mojio.mojiosdk.models.Vehicle;
+
+import java.util.HashMap;
+import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -74,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences(graphData, Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("Data", 0).apply();
-        mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
+        mMojio = new MojioClient(this.getApplicationContext(), MOJIO_APP_ID, null, REDIRECT_URL);
         if(!mMojio.isUserLoggedIn()) doOauth2Login();
         else successful_Login();
     }
