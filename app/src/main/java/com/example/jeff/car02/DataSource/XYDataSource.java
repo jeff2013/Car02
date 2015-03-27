@@ -49,6 +49,12 @@ public class XYDataSource extends DataSource implements XYSeries{
     // The update rate when the car is off
     private int passiveUpdateInterval;
 
+    /**
+     * Creates an XY Data Source
+     * @param mojioClient The Mojio Client Instance
+     * @param activeUpdateInterval The update interval when the ignition is on, in ms
+     * @param passiveUpdateInterval The update interval when the ignition is off, in ms
+     */
     public XYDataSource(MojioClient mojioClient, int activeUpdateInterval, int passiveUpdateInterval) {
         super(mojioClient);
         needQuery = true;

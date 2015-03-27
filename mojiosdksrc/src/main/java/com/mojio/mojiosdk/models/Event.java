@@ -18,6 +18,8 @@ public class Event {
     public float Distance;
     public float Speed;
     public String _id;
+    public float FuelUsage;
+    public float CO2Emissions;
 
     public Diagnostics[] DTCs;
 

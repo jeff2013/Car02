@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jeff.car02.DataSource.DyanmicXYDataSource;
-import com.example.jeff.car02.DataSource.StaticXYDataSource;
+import com.example.jeff.car02.DataSource.XYDataSource;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -29,7 +29,7 @@ public class Fragment_section3 extends SupportMapFragment {
     private GoogleMap map;
 
     private MojioClient mMojio;
-    private StaticXYDataSource dataSource;
+    private XYDataSource dataSource;
     private List<Marker> markers;
 
     public void setMojioClient(MojioClient client){
@@ -119,7 +119,7 @@ public class Fragment_section3 extends SupportMapFragment {
             }
         });*/
 
-        dataSource = new DyanmicXYDataSource(mMojio, 500);
+        dataSource = new DyanmicXYDataSource(mMojio, 1000, 20000);
         dataSource.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {

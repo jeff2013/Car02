@@ -13,8 +13,8 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.example.jeff.car02.DataSource.DataSource;
-import com.example.jeff.car02.DataSource.StaticXYDataSource;
-import com.example.jeff.car02.DataSource.DyanmicXYDataSource;
+import com.example.jeff.car02.DataSource.XYDataSource;
+import com.example.jeff.car02.DataSource.XYDataSource;
 import com.example.jeff.car02.R;
 import com.mojio.mojiosdk.MojioClient;
 
@@ -47,7 +47,7 @@ public class DynamicXYPlotFragment extends Fragment {
     private DynamicXYPlotUpdater plotUpdater;
     private LineAndPointFormatter format;
     private MojioClient mMojio;
-    private StaticXYDataSource d;
+    private XYDataSource d;
 
     // Used to get updates from the data source
     private class DynamicXYPlotUpdater implements Observer {
@@ -149,7 +149,7 @@ public class DynamicXYPlotFragment extends Fragment {
         format.getFillPaint().setAlpha(0x00);
         format.getVertexPaint().setAlpha(0x00);
         // Set up a data source
-        this.data = new DyanmicXYDataSource(mMojio, 500);
+        this.data = new XYDataSource(mMojio, 1000, 20000);
         setDataSource(data);
         enableDataSource();
         return view;
