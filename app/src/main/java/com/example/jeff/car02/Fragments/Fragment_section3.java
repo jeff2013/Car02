@@ -1,12 +1,18 @@
 package com.example.jeff.car02.Fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.example.jeff.car02.DataSource.DyanmicXYDataSource;
-import com.example.jeff.car02.DataSource.XYDataSource;
+import com.example.jeff.car02.DynamicXYDataSource;
+import com.example.jeff.car02.R;
+import com.example.jeff.car02.StaticXYDataSource;
+import com.example.jeff.car02.TestDynamicXYDataSource;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -15,10 +21,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.mojio.mojiosdk.MojioClient;
+import com.mojio.mojiosdk.models.Event;
+import com.mojio.mojiosdk.models.Trip;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -29,7 +43,7 @@ public class Fragment_section3 extends SupportMapFragment {
     private GoogleMap map;
 
     private MojioClient mMojio;
-    private XYDataSource dataSource;
+    private DynamicXYDataSource dataSource;
     private List<Marker> markers;
 
     public void setMojioClient(MojioClient client){
@@ -119,7 +133,9 @@ public class Fragment_section3 extends SupportMapFragment {
             }
         });*/
 
-        dataSource = new DyanmicXYDataSource(mMojio, 1000, 20000);
+        //new TestDynamicXYDataSource(1000, mMojio, getActivity());
+        //new StaticXYDataSource(mMojio, getActivity());
+        dataSource = new TestDynamicXYDataSource(1000, mMojio, getActivity());
         dataSource.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {
@@ -128,7 +144,7 @@ public class Fragment_section3 extends SupportMapFragment {
                 float maxData = dataSource.getMaxY();
 
                 map.clear();
-                if(dataSource.getLocations().isEmpty())
+                if(dataSource.getLocations().isEmpty()||dataSource.size()==0)
                     return;
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -139,7 +155,6 @@ public class Fragment_section3 extends SupportMapFragment {
                     opt.draggable(false);
                     opt.position(positions.get(i));
                     opt.flat(true);
-
                     float normalisedData = dataSource.getY(i).floatValue() / maxData;
                     float colour = (BitmapDescriptorFactory.HUE_RED - BitmapDescriptorFactory.HUE_BLUE) * normalisedData + BitmapDescriptorFactory.HUE_BLUE;
                     colour = colour > 359 ? 359 : colour;
