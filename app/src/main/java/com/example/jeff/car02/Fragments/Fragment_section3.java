@@ -133,6 +133,8 @@ public class Fragment_section3 extends SupportMapFragment {
             }
         });*/
 
+        //new TestDynamicXYDataSource(1000, mMojio, getActivity());
+        //new StaticXYDataSource(mMojio, getActivity());
         dataSource = new TestDynamicXYDataSource(1000, mMojio, getActivity());
         dataSource.addObserver(new Observer() {
             @Override
@@ -142,7 +144,7 @@ public class Fragment_section3 extends SupportMapFragment {
                 float maxData = dataSource.getMaxY();
 
                 map.clear();
-                if(dataSource.getLocations().isEmpty())
+                if(dataSource.getLocations().isEmpty()||dataSource.size()==0)
                     return;
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();

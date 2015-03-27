@@ -1,13 +1,21 @@
 package com.example.jeff.car02;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -16,14 +24,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
+import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
@@ -31,9 +39,7 @@ import com.example.jeff.car02.Fragments.Fragment_section1;
 import com.example.jeff.car02.Fragments.Fragment_section2;
 import com.example.jeff.car02.Fragments.Fragment_section3;
 import com.example.jeff.car02.Fragments.Fragment_section4;
-import com.google.android.gms.maps.MapFragment;
 import com.mojio.mojiosdk.MojioClient;
-import com.mojio.mojiosdk.models.Event;
 import com.mojio.mojiosdk.models.User;
 import com.mojio.mojiosdk.models.Vehicle;
 
@@ -57,6 +63,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      */
     ViewPager mViewPager;
 
+    //Login page widgets
+    Button btn_login;
+    Bitmap bitmap;
+    Bitmap bitmap_pressed;
+    Button activeButton = null;
+    int i = 0;
+    //Mojio keys/codes
+
     private final static String MOJIO_APP_ID = "ddf63e97-865a-4b95-8e2f-d414d8e2d5b1";
     private final static String REDIRECT_URL = "myfirstmojio://"; // Example "myfirstmojio://"
     private final static String SECRET_KEY= "872bca1d-9a0c-4ad4-932b-3b696658df55";
@@ -75,8 +89,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         sharedPreferences = getSharedPreferences(graphData, Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("Data", 0).apply();
         mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
-        if(!mMojio.isUserLoggedIn()) doOauth2Login();
-        else successful_Login();
+        if(!mMojio.isUserLoggedIn()){
+            doOauth2Login();
+        } else if(hasvalidConnection()){
+            successful_Login();
+        } else {
+            doOauth2Login();
+        }
     }
 
     @Override
@@ -84,12 +103,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         if (requestCode == OAUTH_REQUEST) {
             // We now have a stored access token
             if (resultCode == RESULT_OK) {
-                Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Logged in successfully main activity", Toast.LENGTH_LONG).show();
                 //getCurrentUser(); // Now attempt to get user info
                 getCurrentUser();
                 successful_Login();
             }
-
             else {
                 Toast.makeText(MainActivity.this, "Problem logging in", Toast.LENGTH_LONG).show();
             }
@@ -99,7 +117,131 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private void doOauth2Login() {
         // Launch the OAuth request; this will launch a web view Activity for the user enter their login.
         // When the Activity finishes, we listen for it in the onActivityResult method
-        mMojio.launchLoginActivity(this, OAUTH_REQUEST);
+        if(hasvalidConnection()){
+            mMojio.launchLoginActivity(this, OAUTH_REQUEST);
+        }else {
+            View loginView = View.inflate(this, R.layout.activity_login2, null);
+            bitmapTouchSetUp(loginView);
+            View decorView = getWindow().getDecorView();
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+            // Remember that you should never show the action bar if the
+                // status bar is hidden, so hide that too if necessary.
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.hide();
+            setContentView(loginView);
+        }
+    }
+    //Sets up the touch functionality of the login button bitmap while resizing the bitmap by calling getResizedBitmap
+    public void bitmapTouchSetUp(View loginView){
+        bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttonbitmap);
+        bitmap_pressed = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttongraphic);
+
+        Display display  = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final int width = size.x;
+        final int height = size.y;
+        bitmap = getResizedBitmap(bitmap, height-height/4, width);
+        bitmap_pressed = getResizedBitmap(bitmap_pressed,height-height/4, width);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+        //RippleDrawable.createRipple
+        BitmapDrawable bitmapDrawable_pressed = new BitmapDrawable(getResources(), bitmap_pressed);
+        btn_login = (Button) loginView.findViewById(R.id.btn_login);
+        activeButton = btn_login;
+        setSelector(bitmapDrawable, bitmapDrawable_pressed);
+        btn_login.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int eventPadTouch = event.getAction();
+                float iX=event.getX();
+                float iY=event.getY();
+
+                switch (eventPadTouch) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (iX>=0 & iY>=0 & iX<bitmap.getWidth() & iY<bitmap.getHeight()) { //Makes sure that X and Y are not less than 0, and no more than the height and width of the image.
+                            if (bitmap.getPixel((int) iX, (int) iY)!=0) {
+                                selectButton(btn_login);
+                                if(hasvalidConnection()){
+                                    Intent retryLogin = new Intent(MainActivity.this, MainActivity.class);
+                                    startActivity(retryLogin);
+                                }else {
+                                    Toast.makeText(MainActivity.this, "You do not have a valid connection", Toast.LENGTH_SHORT).show();
+                                }
+                                // actual image area is clicked(alpha not equal to 0), do something
+                            }
+                        }
+                        return true;
+                }
+                return false;
+            }
+
+        });
+        selectButton(btn_login);
+    }
+
+    private void selectButton(Button button) {
+
+        if (activeButton != null) {
+            activeButton.setSelected(false);
+            activeButton.setPressed(false);
+            activeButton = null;
+        }
+
+        activeButton = button;
+        if(i == 0){
+            activeButton.setSelected(false);
+            activeButton.setPressed(false);
+            i++;
+        } else {
+            activeButton.setSelected(true);
+            activeButton.setPressed(true);
+        }
+    }
+
+    public void setSelector(Drawable backgroundBitmap, Drawable pressedBitmap){
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[] {android.R.attr.state_pressed},
+                pressedBitmap);
+        states.addState(new int[] {android.R.attr.state_focused},
+               backgroundBitmap);
+        states.addState(new int[] { },
+                backgroundBitmap);
+        btn_login.setBackgroundDrawable(states);
+    }
+
+    //returns a bitmap that is resized to a specified height and width
+    //In our case we pass in the screen's height and width.
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
+    }
+
+
+    private boolean hasvalidConnection(){
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 
     private void getCurrentUser() {

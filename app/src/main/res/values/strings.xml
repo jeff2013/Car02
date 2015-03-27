@@ -12,6 +12,9 @@
     <string name="fragment1">Fragment 1</string>
     <string name="fragment2">Fragment 2</string>
     <string name="title_activity_login">Login</string>
+    <string name="And">and</string>
+    <string name="Data">Data</string>
+    <string name="Unavailable">Unavailable</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -2,80 +2,100 @@ package com.example.jeff.car02;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.maps.MapFragment;
-import com.mojio.mojiosdk.MojioClient;
-import com.mojio.mojiosdk.models.User;
-import com.mojio.mojiosdk.models.Vehicle;
 
 
 public class Login extends Activity {
-    //commitfile
+    Button redirect;
+    Bitmap bitmap;
 
-    Button loginButton;
-    private final static String MOJIO_APP_ID = "ddf63e97-865a-4b95-8e2f-d414d8e2d5b1";
-    private final static String REDIRECT_URL = "myfirstmojio://"; // Example "myfirstmojio://"
+    public boolean onTouch(View v, MotionEvent event) {
 
-    private static int OAUTH_REQUEST = 0;
+        int eventPadTouch = event.getAction();
+        float iX=event.getX();
+        float iY=event.getY();
 
-    // The main mojio client object; allows l ogin and data retrieval to occur.
-    private MojioClient mMojio;
+        switch (eventPadTouch) {
 
-    private User mCurrentUser;
-    private Vehicle[] mUserVehicles;
-
-    private Button mLoginButton;
-    private TextView mUserName, mUserEmail;
-    private ListView mVehicleList;
-    private MapFragment mMap;
+            case MotionEvent.ACTION_DOWN:
+                if (iX>=0 & iY>=0 & iX<bitmap.getWidth() & iY<bitmap.getHeight()) { //Makes sure that X and Y are not less than 0, and no more than the height and width of the image.
+                    if (bitmap.getPixel((int) iX, (int) iY)!=0) {
+                        Toast.makeText(this, "Bitmapclicked", Toast.LENGTH_SHORT).show();
+                        // actual image area is clicked(alpha not equal to 0), do something
+                    }
+                }
+                return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login2);
-        mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
-        loginButton = (Button) this.findViewById(R.id.btn_login);
-        loginButton.setOnClickListener(new View.OnClickListener() {
+       /* MainActivity m = new MainActivity();
+        bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttongraphic);
+        Display display  = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        bitmap = getResizedBitmap(bitmap, height, width);
+        View mainView = View.inflate(Login.this, R.layout.activity_login2, null);
+        redirect = (Button) mainView.findViewById(R.id.btn_login);
+        redirect.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                doOauth2Login();
+            public boolean onTouch(View v, MotionEvent event) {
+                int eventPadTouch = event.getAction();
+                float iX=event.getX();
+                float iY=event.getY();
+
+                switch (eventPadTouch) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        if (iX>=0 & iY>=0 & iX<bitmap.getWidth() & iY<bitmap.getHeight()) { //Makes sure that X and Y are not less than 0, and no more than the height and width of the image.
+                            if (bitmap.getPixel((int) iX, (int) iY)!=0) {
+                                Toast.makeText(Login.this, "Bitmapclicked", Toast.LENGTH_SHORT).show();
+                                // actual image area is clicked(alpha not equal to 0), do something
+                            }
+                        }
+                        return true;
+                }
+                return false;
             }
         });
+        */
     }
 
-    @Override
-    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-        if (requestCode == OAUTH_REQUEST) {
-            // We now have a stored access token
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(Login.this, "Logged in successfully", Toast.LENGTH_LONG).show();
-                //getCurrentUser(); // Now attempt to get user info
-                login();
-            }
-            else {
-                Toast.makeText(Login.this, "Problem logging in", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void doOauth2Login() {
-        // Launch the OAuth request; this will launch a web view Activity for the user enter their login.
-        // When the Activity finishes, we listen for it in the onActivityResult method
-        mMojio.launchLoginActivity(this, OAUTH_REQUEST);
-    }
-
-
-    public void login(){
-        Intent logged_in = new Intent(this, MainActivity.class);
-        startActivity(logged_in);
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+            // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+            // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+            // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
     }
 
 
 
+
+
+
+    private void launchMainActivity(){
+        Intent mainActivity = new Intent(Login.this, MainActivity.class);
+        startActivity(mainActivity);
+    }
 }

@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"
+            android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -32,7 +32,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".Login"
+            android:label="login"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait">
+        </activity>
+
         <activity android:name="com.mojio.mojiosdk.networking.OAuthLoginActivity" />
+
 
         <meta-data
             android:name="com.google.android.gms.version"
