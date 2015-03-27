@@ -10,6 +10,7 @@ import com.mojio.mojiosdk.models.Trip;
 
 import org.joda.time.DateTime;
 
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +94,8 @@ public class XYDataSource extends DataSource implements XYSeries{
                     executorService.execute(t1);
                     // Block until we get the latest trip
                     latestTrip = t1.get()[0];
+                    // We no longer need a query unless we are forced to re-update our data
+                    needQuery = false;
                 }
                 String id = latestTrip._id;
                 // Prepare for a new query
@@ -105,20 +108,18 @@ public class XYDataSource extends DataSource implements XYSeries{
                 executorService.execute(t2);
                 // Block until we get our result, then convert them to a list and store
                 // We reset the distance to be something useful
-                events.clear();
                 Event[] e = t2.get();
                 // Add the events
                 addEvents(e);
                 offset+=e.length;
                 // Notify all observers that the data has been changed
                 notifier.notifyObservers();
+                Thread.sleep(currentUpdateInterval);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            // We no longer need a query unless we are forced to re-update our data
-            needQuery = false;
         }
 }
 
@@ -128,24 +129,26 @@ public class XYDataSource extends DataSource implements XYSeries{
      */
     protected void addEvents(Event[] e) {
         for(int i = 0; i < e.length; i++) {
-            if (i > 0) {
+            Event currEvent = e[i];
+            if (i+offset > 0) {
+                Event prevEvent = events.get(i-1+offset);
                 // Calculate Delta T
-                long dt = Utilities.getTimeFromDateString(e[i].Time) - Utilities.getTimeFromDateString(e[i - 1].Time);
+                long dt = Utilities.getTimeFromDateString(currEvent.Time) - Utilities.getTimeFromDateString(prevEvent.Time);
                 // Get the real distance, and store it in the event
-                e[i].Distance = Utilities.getRealDistance(e[i - 1].Distance, e[i].Speed, dt);
+                currEvent.Distance = Utilities.getRealDistance(prevEvent.Distance, currEvent.Speed, dt);
                 // Check That delta fuel is never negative
-                float currFuel = Utilities.getTotalFuelUsage(e[i].Distance, e[i].FuelEfficiency);
-                float prevFuel = Utilities.getTotalFuelUsage(e[i - 1].Distance, e[i - 1].FuelEfficiency);
-                e[i].FuelUsage = Math.max(currFuel, prevFuel);
-                e[i].CO2Emissions = Utilities.getCO2Production(e[i].FuelUsage);
-                if (e[i].EventType.equals("IgnitionOn")) {
+                float currFuel = Utilities.getTotalFuelUsage(currEvent.Distance, currEvent.FuelEfficiency);
+                float prevFuel = Utilities.getTotalFuelUsage(prevEvent.Distance, prevEvent.FuelEfficiency);
+                currEvent.FuelUsage = Math.max(currFuel, prevFuel);
+                currEvent.CO2Emissions = Utilities.getCO2Production(currEvent.FuelUsage);
+                if (currEvent.EventType.equals("IgnitionOn")) {
                     currentUpdateInterval = activeUpdateInterval;
-                } else if (e[i].EventType.equals("IgnitionOff")) {
+                } else if (currEvent.EventType.equals("IgnitionOff")) {
                     currentUpdateInterval = passiveUpdateInterval;
                 }
             }
-            locations.add(new LatLng(e[i].Location.Lat, e[i].Location.Lng));
-            events.add(e[i]);
+            locations.add(new LatLng(currEvent.Location.Lat, currEvent.Location.Lng));
+            events.add(currEvent);
         }
     }
 
