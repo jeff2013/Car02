@@ -1,5 +1,8 @@
 package com.example.jeff.car02.DataSource;
 
+
+import android.util.Log;
+
 import com.androidplot.xy.XYSeries;
 import com.example.jeff.car02.Utilities;
 import com.google.android.gms.maps.model.LatLng;
@@ -10,7 +13,6 @@ import com.mojio.mojiosdk.models.Trip;
 
 import org.joda.time.DateTime;
 
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +21,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-import static com.example.jeff.car02.DataSource.DataSource.dataTypes.*;
 
 /**
  * Created by reed on 3/24/15.
@@ -36,9 +37,9 @@ public class XYDataSource extends DataSource implements XYSeries{
     // This is used to determine if we need a query
     protected boolean needQuery;
     // Determines what data is used for the x values
-    private dataTypes xSelector = TIME;
+    private DataTypes xSelector = DataTypes.TIME;
     // Determines what data is used for the y values
-    private dataTypes ySelector = TOTAL_FUEL;
+    private DataTypes ySelector = DataTypes.DISTANCE;
     // The offset to the API calls
     private int offset = 0;
     // The current Trip object
@@ -78,7 +79,6 @@ public class XYDataSource extends DataSource implements XYSeries{
         // It has only one thread so we can do things in order
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         while(isRunning) {
-            // If we need to, perform a query
             try {
                 if (needQuery) {
                     // Set up the the query for the last trip
@@ -94,6 +94,8 @@ public class XYDataSource extends DataSource implements XYSeries{
                     executorService.execute(t1);
                     // Block until we get the latest trip
                     latestTrip = t1.get()[0];
+                    // Clear the events to prepare for a new trip
+                    events.clear();
                     // We no longer need a query unless we are forced to re-update our data
                     needQuery = false;
                 }
@@ -136,13 +138,17 @@ public class XYDataSource extends DataSource implements XYSeries{
                 long dt = Utilities.getTimeFromDateString(currEvent.Time) - Utilities.getTimeFromDateString(prevEvent.Time);
                 // Get the real distance, and store it in the event
                 currEvent.Distance = Utilities.getRealDistance(prevEvent.Distance, currEvent.Speed, dt);
+                Log.d("XYDataSource", currEvent.Distance + "");
                 // Check That delta fuel is never negative
                 float currFuel = Utilities.getTotalFuelUsage(currEvent.Distance, currEvent.FuelEfficiency);
-                float prevFuel = Utilities.getTotalFuelUsage(prevEvent.Distance, prevEvent.FuelEfficiency);
+                float prevFuel = prevEvent.FuelUsage;
                 currEvent.FuelUsage = Math.max(currFuel, prevFuel);
                 currEvent.CO2Emissions = Utilities.getCO2Production(currEvent.FuelUsage);
                 if (currEvent.EventType.equals("IgnitionOn")) {
                     currentUpdateInterval = activeUpdateInterval;
+                    // If the ignition is turned on, this means there is a new trip, so we need to query to get the latest trip
+                    needQuery = true;
+                    events.clear();
                 } else if (currEvent.EventType.equals("IgnitionOff")) {
                     currentUpdateInterval = passiveUpdateInterval;
                 }
@@ -156,7 +162,7 @@ public class XYDataSource extends DataSource implements XYSeries{
      * Selects the X Data to be graphed
      * @param d A dataType enum
      */
-    public void selectXOutput(dataTypes d) {
+    public void selectXOutput(DataTypes d) {
         xSelector = d;
     }
 
@@ -164,7 +170,7 @@ public class XYDataSource extends DataSource implements XYSeries{
      * Selects the Y Data to be graphed
      * @param d A dataType enum
      */
-    public void selectYOutput(dataTypes d) {
+    public void selectYOutput(DataTypes d) {
         ySelector = d;
     }
 
@@ -202,7 +208,7 @@ public class XYDataSource extends DataSource implements XYSeries{
      * @param selector a dataType enum, used to choose which data to return
      * @return The data requested
      */
-    private Number getSelectedData(int i, dataTypes selector) {
+    private Number getSelectedData(int i, DataTypes selector) {
         Number output = 0;
         switch (selector) {
             case TIME:
@@ -211,6 +217,9 @@ public class XYDataSource extends DataSource implements XYSeries{
                 break;
             case DISTANCE:
                 output = events.get(i).Distance;
+                break;
+            case SPEED:
+                output = events.get(i).Speed;
                 break;
             case FUEL_EFFICIENCY:
                 output= events.get(i).FuelEfficiency;

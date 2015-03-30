@@ -29,10 +29,8 @@ public class Utilities {
      * @return The new total distance traveled, in km
      */
     public static float getRealDistance(float prevDistance, float speed, long deltaTime) {
-        float dist = prevDistance + speed* deltaTime/(60*60*1000);
-        if (dist < prevDistance) {
-        }
-        return dist;
+        // TODO: There may be an issue with this math, as it gives a incorrect answer
+        return prevDistance + (speed * deltaTime)/(60*60*1000);
     }
 
     /**

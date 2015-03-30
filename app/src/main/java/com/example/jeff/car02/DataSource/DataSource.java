@@ -16,10 +16,6 @@ import java.util.Observer;
  */
 public abstract class DataSource implements Runnable{
 
-    // An enum of all possible data to be graphed
-    public static enum dataTypes{
-        TIME, DISTANCE, FUEL_EFFICIENCY, DELTA_FUEL, TOTAL_FUEL, TOTAL_CO2
-    }
     protected MyObserver notifier;
     protected MojioClient mojioClient;
     // The status of the thread
