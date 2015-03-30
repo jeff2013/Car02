@@ -50,6 +50,8 @@ public class XYDataSource extends DataSource implements XYSeries{
     private int activeUpdateInterval;
     // The update rate when the car is off
     private int passiveUpdateInterval;
+    // The last event with data that matters
+    private Event lastImportantEvent;
 
     /**
      * Creates an XY Data Source
@@ -93,18 +95,30 @@ public class XYDataSource extends DataSource implements XYSeries{
                     // Schedule our job to be executed
                     executorService.execute(t1);
                     // Block until we get the latest trip
-                    latestTrip = t1.get()[0];
-                    // Clear the events to prepare for a new trip
-                    events.clear();
-                    // We no longer need a query unless we are forced to re-update our data
-                    needQuery = false;
+                    Trip tmp = t1.get()[0];
+                    // If the trip received and the trip we are operating on are the same, do nothing
+                    if(latestTrip != null && latestTrip._id.equals(tmp._id)) {
+                        Thread.sleep(currentUpdateInterval);
+                        continue;
+                    } else {
+                        lastImportantEvent = null;
+                        // Set the trip to the new latest trip
+                        latestTrip = tmp;
+                        // Clear the events to prepare for a new trip
+                        events.clear();
+                        // Reset the offset
+                        offset = 0;
+                        // We no longer need a query unless we are forced to re-update our data
+                        needQuery = false;
+                    }
                 }
                 String id = latestTrip._id;
                 // Prepare for a new query
                 HashMap<String, String> queryParams = new HashMap<String, String>();
                 queryParams.put("id", id);
                 queryParams.put("limit", "1000");
-                queryParams.put("offset", ""+offset);
+                queryParams.put("offset", "" + offset);
+                Log.d("XYDataSource", "Offset = " + offset);
                 // Make an new future task and schedule it
                 FutureTask<Event[]> t2 = new FutureTask<Event[]>(new MojioCallable<Event[]>(mojioClient, Event[].class, queryParams, "Trips/" + id + "/Events"));
                 executorService.execute(t2);
@@ -113,9 +127,10 @@ public class XYDataSource extends DataSource implements XYSeries{
                 Event[] e = t2.get();
                 // Add the events
                 addEvents(e);
-                offset+=e.length;
+                offset += e.length;
                 // Notify all observers that the data has been changed
                 notifier.notifyObservers();
+
                 Thread.sleep(currentUpdateInterval);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -123,7 +138,7 @@ public class XYDataSource extends DataSource implements XYSeries{
                 e.printStackTrace();
             }
         }
-}
+    }
 
     /**
      * Do processing and add the event to the ArrayList
@@ -132,26 +147,37 @@ public class XYDataSource extends DataSource implements XYSeries{
     protected void addEvents(Event[] e) {
         for(int i = 0; i < e.length; i++) {
             Event currEvent = e[i];
-            if (i+offset > 0) {
-                Event prevEvent = events.get(i-1+offset);
-                // Calculate Delta T
-                long dt = Utilities.getTimeFromDateString(currEvent.Time) - Utilities.getTimeFromDateString(prevEvent.Time);
-                // Get the real distance, and store it in the event
-                currEvent.Distance = Utilities.getRealDistance(prevEvent.Distance, currEvent.Speed, dt);
-                Log.d("XYDataSource", currEvent.Distance + "");
-                // Check That delta fuel is never negative
-                float currFuel = Utilities.getTotalFuelUsage(currEvent.Distance, currEvent.FuelEfficiency);
-                float prevFuel = prevEvent.FuelUsage;
-                currEvent.FuelUsage = Math.max(currFuel, prevFuel);
-                currEvent.CO2Emissions = Utilities.getCO2Production(currEvent.FuelUsage);
-                if (currEvent.EventType.equals("IgnitionOn")) {
-                    currentUpdateInterval = activeUpdateInterval;
-                    // If the ignition is turned on, this means there is a new trip, so we need to query to get the latest trip
-                    needQuery = true;
-                    events.clear();
-                } else if (currEvent.EventType.equals("IgnitionOff")) {
-                    currentUpdateInterval = passiveUpdateInterval;
+            // If the speed is zero, there is no good data here
+            // TODO: Fix the fucking algorithm
+            if(currEvent.Speed != 0) {
+                if (lastImportantEvent != null) {
+                    // Calculate Delta T
+                    long dt = Utilities.getTimeFromDateString(currEvent.Time) - Utilities.getTimeFromDateString(lastImportantEvent.Time);
+                    // Get the real distance, and store it in the event
+                    currEvent.computedDistance = Utilities.getRealDistance(lastImportantEvent.computedDistance, currEvent.Speed, dt);
+
+                    //Log.d("XYDataSource", "Delta T = " + dt + "MS");
+                    //Log.d("XYDataSource", "Distance Traveled = " + currEvent.Distance + "KM");
+                    //Log.d("XYDataSource", "Current Speed = " + currEvent.Speed + " KM/H");
+                    // Check That delta fuel is never negative
+                    float currFuel = Utilities.getTotalFuelUsage(currEvent.Distance, currEvent.FuelEfficiency);
+                    float prevFuel = lastImportantEvent.FuelUsage;
+                    currEvent.FuelUsage = Math.max(currFuel, prevFuel);
+                    currEvent.CO2Emissions = Utilities.getCO2Production(currEvent.FuelUsage);
+                } else {
+                    currEvent.computedDistance = currEvent.Distance;
                 }
+                lastImportantEvent = currEvent;
+            } else if(lastImportantEvent != null) {
+                currEvent.computedDistance = lastImportantEvent.computedDistance;
+            }
+            if (currEvent.EventType.equals("IgnitionOn")) {
+                currentUpdateInterval = activeUpdateInterval;
+                // If the ignition is turned on, this means there is a new trip, so we need to query to get the latest trip
+            } else if (currEvent.EventType.equals("IgnitionOff")) {
+                currentUpdateInterval = passiveUpdateInterval;
+                // Because the trip has ended, poll for new trips less frequently
+                needQuery = true;
             }
             locations.add(new LatLng(currEvent.Location.Lat, currEvent.Location.Lng));
             events.add(currEvent);
@@ -216,7 +242,7 @@ public class XYDataSource extends DataSource implements XYSeries{
                 output = d.toDate().getTime();
                 break;
             case DISTANCE:
-                output = events.get(i).Distance;
+                output = events.get(i).computedDistance;
                 break;
             case SPEED:
                 output = events.get(i).Speed;
