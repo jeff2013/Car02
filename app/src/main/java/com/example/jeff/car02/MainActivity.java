@@ -93,14 +93,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences(graphData, Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("Data", 0).apply();
-        mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
-        if(!mMojio.isUserLoggedIn()){
+        mMojio = singletonMojio.getMojioClient(MainActivity.this);
+        //mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
+        if(mMojio.isUserLoggedIn()){
+            Toast.makeText(this, "MainActivity oncreate reached!", Toast.LENGTH_SHORT).show();
+            getCurrentUser();
+            getUserVehicles();
+            successful_Login();
+        }else{
+            Intent test = new Intent(this, Login.class);
+            startActivity(test);
+        }
+        /*if(!mMojio.isUserLoggedIn()){
             doOauth2Login();
         } else if(hasvalidConnection()){
             successful_Login();
         } else {
             doOauth2Login();
         }
+        */
     }
 
     @Override
@@ -147,109 +158,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             public void onClick(View v) {
                 if(hasvalidConnection()){
                     mMojio.launchLoginActivity(MainActivity.this, OAUTH_REQUEST);
+                    successful_Login();
                 }else{
                     Toast.makeText(MainActivity.this, "Please aquire internet access", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-
-    //Sets up the touch functionality of the login button bitmap while resizing the bitmap by calling getResizedBitmap
-    /*public void bitmapTouchSetUp(View loginView){
-        bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttonbitmap);
-        bitmap_pressed = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttongraphic);
-
-        Display display  = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        final int width = size.x;
-        final int height = size.y;
-        bitmap = getResizedBitmap(bitmap, height-height/4, width);
-        bitmap_pressed = getResizedBitmap(bitmap_pressed,height-height/4, width);
-        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-        BitmapDrawable bitmapDrawable_pressed = new BitmapDrawable(getResources(), bitmap_pressed);
-        btn_login = (Button) loginView.findViewById(R.id.btn_login);
-        activeButton = btn_login;
-        setSelector(bitmapDrawable, bitmapDrawable_pressed);
-        btn_login.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int eventPadTouch = event.getAction();
-                float iX=event.getX();
-                float iY=event.getY();
-
-                switch (eventPadTouch) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (iX>=0 & iY>=0 & iX<bitmap.getWidth() & iY<bitmap.getHeight()) { //Makes sure that X and Y are not less than 0, and no more than the height and width of the image.
-                            if (bitmap.getPixel((int) iX, (int) iY)!=0) {
-                                selectButton(btn_login);
-                                if(hasvalidConnection()){
-                                    Intent retryLogin = new Intent(MainActivity.this, MainActivity.class);
-                                    startActivity(retryLogin);
-                                }else {
-                                    Toast.makeText(MainActivity.this, "You do not have a valid connection", Toast.LENGTH_SHORT).show();
-                                }
-                                // actual image area is clicked(alpha not equal to 0), do something
-                            }
-                        }
-                        return true;
-                }
-                return false;
-            }
-
-        });
-        selectButton(btn_login);
-    }
-
-    private void selectButton(Button button) {
-
-        if (activeButton != null) {
-            activeButton.setSelected(false);
-            activeButton.setPressed(false);
-            activeButton = null;
-        }
-
-        activeButton = button;
-        if(i == 0){
-            activeButton.setSelected(false);
-            activeButton.setPressed(false);
-            i++;
-        } else {
-            activeButton.setSelected(true);
-            activeButton.setPressed(true);
-            //RippleDrawable drawable = (RippleDrawable) activeButton.getBackground();
-            //drawable.setVisible(true, true);
-        }
-    }
-
-    public void setSelector(Drawable backgroundBitmap, Drawable pressedBitmap){
-        StateListDrawable states = new StateListDrawable();
-        states.addState(new int[] {android.R.attr.state_pressed},
-                pressedBitmap);
-        states.addState(new int[] {android.R.attr.state_focused},
-               backgroundBitmap);
-        states.addState(new int[] { },
-                backgroundBitmap);
-        btn_login.setBackgroundDrawable(states);
-    }
-
-    //returns a bitmap that is resized to a specified height and width
-    //In our case we pass in the screen's height and width.
-    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-        // RECREATE THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-        return resizedBitmap;
-    }
-    */
-
 
     private boolean hasvalidConnection(){
         boolean haveConnectedWifi = false;
@@ -461,3 +376,99 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
     }
 }
+
+//Sets up the touch functionality of the login button bitmap while resizing the bitmap by calling getResizedBitmap
+    /*public void bitmapTouchSetUp(View loginView){
+        bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttonbitmap);
+        bitmap_pressed = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttongraphic);
+
+        Display display  = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final int width = size.x;
+        final int height = size.y;
+        bitmap = getResizedBitmap(bitmap, height-height/4, width);
+        bitmap_pressed = getResizedBitmap(bitmap_pressed,height-height/4, width);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+        BitmapDrawable bitmapDrawable_pressed = new BitmapDrawable(getResources(), bitmap_pressed);
+        btn_login = (Button) loginView.findViewById(R.id.btn_login);
+        activeButton = btn_login;
+        setSelector(bitmapDrawable, bitmapDrawable_pressed);
+        btn_login.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int eventPadTouch = event.getAction();
+                float iX=event.getX();
+                float iY=event.getY();
+
+                switch (eventPadTouch) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (iX>=0 & iY>=0 & iX<bitmap.getWidth() & iY<bitmap.getHeight()) { //Makes sure that X and Y are not less than 0, and no more than the height and width of the image.
+                            if (bitmap.getPixel((int) iX, (int) iY)!=0) {
+                                selectButton(btn_login);
+                                if(hasvalidConnection()){
+                                    Intent retryLogin = new Intent(MainActivity.this, MainActivity.class);
+                                    startActivity(retryLogin);
+                                }else {
+                                    Toast.makeText(MainActivity.this, "You do not have a valid connection", Toast.LENGTH_SHORT).show();
+                                }
+                                // actual image area is clicked(alpha not equal to 0), do something
+                            }
+                        }
+                        return true;
+                }
+                return false;
+            }
+
+        });
+        selectButton(btn_login);
+    }
+
+    private void selectButton(Button button) {
+
+        if (activeButton != null) {
+            activeButton.setSelected(false);
+            activeButton.setPressed(false);
+            activeButton = null;
+        }
+
+        activeButton = button;
+        if(i == 0){
+            activeButton.setSelected(false);
+            activeButton.setPressed(false);
+            i++;
+        } else {
+            activeButton.setSelected(true);
+            activeButton.setPressed(true);
+            //RippleDrawable drawable = (RippleDrawable) activeButton.getBackground();
+            //drawable.setVisible(true, true);
+        }
+    }
+
+    public void setSelector(Drawable backgroundBitmap, Drawable pressedBitmap){
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[] {android.R.attr.state_pressed},
+                pressedBitmap);
+        states.addState(new int[] {android.R.attr.state_focused},
+               backgroundBitmap);
+        states.addState(new int[] { },
+                backgroundBitmap);
+        btn_login.setBackgroundDrawable(states);
+    }
+
+    //returns a bitmap that is resized to a specified height and width
+    //In our case we pass in the screen's height and width.
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
+    }
+    */

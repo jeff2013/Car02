@@ -1,98 +1,126 @@
 package com.example.jeff.car02;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import com.mojio.mojiosdk.MojioClient;
 
 
 public class Login extends Activity {
-    Button redirect;
-    Bitmap bitmap;
 
-    public boolean onTouch(View v, MotionEvent event) {
-
-        int eventPadTouch = event.getAction();
-        float iX=event.getX();
-        float iY=event.getY();
-
-        switch (eventPadTouch) {
-
-            case MotionEvent.ACTION_DOWN:
-                if (iX>=0 & iY>=0 & iX<bitmap.getWidth() & iY<bitmap.getHeight()) { //Makes sure that X and Y are not less than 0, and no more than the height and width of the image.
-                    if (bitmap.getPixel((int) iX, (int) iY)!=0) {
-                        Toast.makeText(this, "Bitmapclicked", Toast.LENGTH_SHORT).show();
-                        // actual image area is clicked(alpha not equal to 0), do something
-                    }
-                }
-                return true;
-        }
-        return false;
-    }
+    private static MojioClient mMojio;
+    private Button mojioLoginButton;
+    private Button mojioOauthButton;
+    private EditText usernameEditor;
+    private EditText passwordEditor;
+    private WebView oAuth2WebView;
+    private static int OAUTH_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       /* MainActivity m = new MainActivity();
-        bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.buttongraphic);
-        Display display  = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        bitmap = getResizedBitmap(bitmap, height, width);
-        View mainView = View.inflate(Login.this, R.layout.activity_login2, null);
-        redirect = (Button) mainView.findViewById(R.id.btn_login);
-        redirect.setOnTouchListener(new View.OnTouchListener() {
+        View contentView = View.inflate(this, R.layout.activity_login_simple, null);
+        mMojio = singletonMojio.getMojioClient(null);
+        setUpLogin(contentView);
+        setContentView(contentView);
+    }
+
+    private void setUpLogin(View loginView){
+        mojioLoginButton = (Button) loginView.findViewById(R.id.btn_loginMojio);
+        mojioLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int eventPadTouch = event.getAction();
-                float iX=event.getX();
-                float iY=event.getY();
-
-                switch (eventPadTouch) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        if (iX>=0 & iY>=0 & iX<bitmap.getWidth() & iY<bitmap.getHeight()) { //Makes sure that X and Y are not less than 0, and no more than the height and width of the image.
-                            if (bitmap.getPixel((int) iX, (int) iY)!=0) {
-                                Toast.makeText(Login.this, "Bitmapclicked", Toast.LENGTH_SHORT).show();
-                                // actual image area is clicked(alpha not equal to 0), do something
-                            }
-                        }
-                        return true;
-                }
-                return false;
+            public void onClick(View v) {
+                //loginWithMojio();
+                View mojioLoginView = View.inflate(Login.this, R.layout.activity_login_simple_mojio, null);
+                setUpMojioLogin(mojioLoginView);
+                setContentView(mojioLoginView);
             }
         });
-        */
+
     }
 
-    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-            // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-            // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-            // RECREATE THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-        return resizedBitmap;
+    private void setUpMojioLogin(View contentView){
+        usernameEditor = (EditText) contentView.findViewById(R.id.editText_username);
+        //usernameEditor.getText().toString();
+        passwordEditor = (EditText) contentView.findViewById(R.id.editText_password);
+        mojioOauthButton = (Button) contentView.findViewById(R.id.btn_OauthLogin);
+        mojioOauthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hasvalidConnection()){
+                    webViewOverride();
+                }
+            }
+        });
     }
 
+    private void webViewOverride(){
+        setContentView(R.layout.activity_oauth_login);
+        //mMojio.launchLoginActivity(this, OAUTH_REQUEST);
+        oAuth2WebView = (WebView) findViewById(R.id.loginwebview);
+        oAuth2WebView.getSettings().setJavaScriptEnabled(true);
+        oAuth2WebView.setWebViewClient(new WebViewClient(){
+            public void onPageFinished(WebView oAuth2WebView, String url){
+                super.onPageFinished(oAuth2WebView, url);
+                String user="jeff2013";
+                String password="Jeffreychang2008";
+                oAuth2WebView.loadUrl("javascript:(function(){document.getElementById('EmailOrUserName').value = '"+user+"';document.getElementById('Password').value='"+password+"';document.getElementById('logon-form').submit();})()");
+                oAuth2WebView.loadUrl("javascript:(function(){document.getElementById('AuthorizeForm').submit();})()");
 
+            }
+        });
+        oAuth2WebView.loadUrl("https://api.moj.io/account/signin?ReturnUrl=%2FOAuth2Sandbox%2Fauthorize%3Fresponse_type%3Dtoken%26client_id%3Dddf63e97-865a-4b95-8e2f-d414d8e2d5b1%26redirect_uri%3Dmyfirstmojio%3A%2F%2F");
+    }
 
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+        if (requestCode == OAUTH_REQUEST) {
+            Toast.makeText(Login.this, "On Activity Result Called", Toast.LENGTH_LONG).show();
+            // We now have a stored access token
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(Login.this, "On Activity Result Called", Toast.LENGTH_LONG).show();
+                //getCurrentUser(); // Now attempt to get user info
+                launchMainActivity();
+            }
+            else {
+                Toast.makeText(Login.this, "On Activity Result login failed", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
-
+    private boolean hasvalidConnection(){
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
 
     private void launchMainActivity(){
         Intent mainActivity = new Intent(Login.this, MainActivity.class);

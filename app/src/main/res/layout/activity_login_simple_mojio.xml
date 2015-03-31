@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:background="@drawable/loginbackground"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="15dp"
+        android:id="@+id/relativeLayout3">
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/loginwhitebar"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:id="@+id/frameLayout_username"
+            android:layout_marginTop="72dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView2"
+                    android:background="@drawable/user"
+                    android:layout_gravity="center_vertical" />
+
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editText_username"
+                    android:focusableInTouchMode="true"
+                    android:layout_gravity="center_horizontal|top" />
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/frameLayout_password"
+            android:layout_marginTop="27dp"
+            android:background="@drawable/loginwhitebar"
+            android:layout_marginRight="30dp"
+            android:layout_below="@+id/frameLayout_username"
+            android:layout_alignStart="@+id/frameLayout_username">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView3"
+                    android:background="@drawable/lock"
+                    android:layout_gravity="center_vertical" />
+
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:ems="10"
+                    android:id="@+id/editText_password"
+                    android:layout_gravity="center_horizontal|top" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_sign_in_short"
+            android:id="@+id/btn_OauthLogin"
+            android:layout_below="@+id/frameLayout_password"
+            android:layout_alignStart="@+id/frameLayout_password"
+            android:layout_alignEnd="@+id/frameLayout_password"
+            android:layout_marginTop="15dp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView4"
+        android:background="@drawable/mojiologo"
+        android:layout_above="@+id/relativeLayout3"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/relativeLayout3"
+        android:layout_alignStart="@+id/relativeLayout3" />
+
+</RelativeLayout>
