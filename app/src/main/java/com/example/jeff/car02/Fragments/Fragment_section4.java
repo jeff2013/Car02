@@ -1,6 +1,5 @@
 package com.example.jeff.car02.Fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;

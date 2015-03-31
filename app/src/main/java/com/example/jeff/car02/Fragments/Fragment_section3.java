@@ -9,10 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.jeff.car02.DynamicXYDataSource;
-import com.example.jeff.car02.R;
-import com.example.jeff.car02.StaticXYDataSource;
-import com.example.jeff.car02.TestDynamicXYDataSource;
+import com.example.jeff.car02.DataSource.XYDataSource;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -43,7 +40,7 @@ public class Fragment_section3 extends SupportMapFragment {
     private GoogleMap map;
 
     private MojioClient mMojio;
-    private DynamicXYDataSource dataSource;
+    private XYDataSource dataSource;
     private List<Marker> markers;
 
     public void setMojioClient(MojioClient client){
@@ -135,7 +132,7 @@ public class Fragment_section3 extends SupportMapFragment {
 
         //new TestDynamicXYDataSource(1000, mMojio, getActivity());
         //new StaticXYDataSource(mMojio, getActivity());
-        dataSource = new TestDynamicXYDataSource(1000, mMojio, getActivity());
+        dataSource = new XYDataSource(mMojio, 1000, 20000);
         dataSource.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {

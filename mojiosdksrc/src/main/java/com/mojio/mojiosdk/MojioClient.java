@@ -71,7 +71,7 @@ public class MojioClient {
     }
 
     /**
-     * Returns true if a user is concidered to be logged in (ie. the proper auth token is stored
+     * Returns true if a user is considered to be logged in (ie. the proper auth token is stored
      * and still valid).
      * @return
      */

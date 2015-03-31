@@ -7,7 +7,11 @@ import android.util.Log;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -73,7 +77,6 @@ public class VolleyHelper {
 
         getRequestQueue().add(req);
     }
-
     /**
      * Adds the specified request to the global queue using the Default TAG.
      *
