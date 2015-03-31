@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -123,6 +124,7 @@ public class MojioClient {
             public void onFailure(String error) {
                 responseListener.onFailure(error);
                 // TODO Need a way to pass back failures better (reasons)
+                //Intent launch_login = new Intent(this,Login.class);
             }
         });
     }
@@ -149,11 +151,14 @@ public class MojioClient {
                 // Now we need to get the USER
                 String userID = result.UserId;
                 getUser(userID, responseListener); // Pass along response listener
+                //Log.d("Mojio Login: ", "Login successful");
+                //Toast.makeText(this, "Mojio Login", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(String error) {
                 responseListener.onFailure(error);
+
                 // TODO Need a way to pass back failures better (reasons)
             }
         });
