@@ -153,6 +153,7 @@ public class MojioClient {
                 getUser(userID, responseListener); // Pass along response listener
                 //Log.d("Mojio Login: ", "Login successful");
                 //Toast.makeText(this, "Mojio Login", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
