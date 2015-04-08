@@ -11,4 +11,8 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="invalid_internet">Internet Connection unavailable</string>
+    <string name="connectionAlert">Unable to login. Please check your internet connection.</string>
+    <string name="LoginFailureTitle">Login Failed</string>
+    <string name="LoginFailureBody">Oops! Login authentication has failed, please try again.</string>
 </resources>

@@ -26,6 +26,6 @@
         android:padding="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/Orange"
+        android:background="@drawable/loginripple"
         android:textColor="@color/white"/>
 </RelativeLayout>

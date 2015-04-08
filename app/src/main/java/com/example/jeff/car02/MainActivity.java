@@ -98,7 +98,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         if(mMojio.isUserLoggedIn()){
             Toast.makeText(this, "MainActivity oncreate reached!", Toast.LENGTH_SHORT).show();
             getCurrentUser();
-            getUserVehicles();
+            //getUserVehicles();
             successful_Login();
         }else{
             Intent test = new Intent(this, Login.class);
@@ -339,8 +339,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     ((Fragment_section1)position_fragment).setMojio(mMojio);
                     break;
                 case 2:
-                    position_fragment = new Fragment_section3();
-                    ((Fragment_section3)position_fragment).setMojioClient(mMojio);
+                    //TODO change back to launching fragment_section3() once map is fixed. Map crashes app.
+                    position_fragment = new Fragment_section4();
+                    //position_fragment = new Fragment_section3();
+                    //((Fragment_section3)position_fragment).setMojioClient(mMojio);
                     break;
                 case 3:
                     position_fragment = new Fragment_section4();

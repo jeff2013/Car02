@@ -1,6 +1,7 @@
 package com.example.jeff.car02;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,10 +29,6 @@ public class Login extends Activity {
 
     private static MojioClient mMojio;
     private Button mojioLoginButton;
-    private Button mojioOauthButton;
-    private EditText usernameEditor;
-    private EditText passwordEditor;
-    private WebView oAuth2WebView;
     private static int OAUTH_REQUEST = 0;
 
     @Override
@@ -43,65 +40,30 @@ public class Login extends Activity {
         setContentView(contentView);
     }
 
-    private void setUpLogin(View loginView){
+    private void setUpLogin(View loginView) {
         mojioLoginButton = (Button) loginView.findViewById(R.id.btn_loginMojio);
         mojioLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //loginWithMojio();
-                View mojioLoginView = View.inflate(Login.this, R.layout.activity_login_simple_mojio, null);
-                setUpMojioLogin(mojioLoginView);
-                setContentView(mojioLoginView);
+               if(hasvalidConnection()) {
+                   mMojio.launchLoginActivity(Login.this, OAUTH_REQUEST);
+               }else{
+                   internetUnavailable();
+               }
             }
         });
 
-    }
-
-    private void setUpMojioLogin(View contentView){
-        usernameEditor = (EditText) contentView.findViewById(R.id.editText_username);
-        //usernameEditor.getText().toString();
-        passwordEditor = (EditText) contentView.findViewById(R.id.editText_password);
-        mojioOauthButton = (Button) contentView.findViewById(R.id.btn_OauthLogin);
-        mojioOauthButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(hasvalidConnection()){
-                    webViewOverride();
-                }
-            }
-        });
-    }
-
-    private void webViewOverride(){
-        setContentView(R.layout.activity_oauth_login);
-        //mMojio.launchLoginActivity(this, OAUTH_REQUEST);
-        oAuth2WebView = (WebView) findViewById(R.id.loginwebview);
-        oAuth2WebView.getSettings().setJavaScriptEnabled(true);
-        oAuth2WebView.setWebViewClient(new WebViewClient(){
-            public void onPageFinished(WebView oAuth2WebView, String url){
-                super.onPageFinished(oAuth2WebView, url);
-                String user="jeff2013";
-                String password="Jeffreychang2008";
-                oAuth2WebView.loadUrl("javascript:(function(){document.getElementById('EmailOrUserName').value = '"+user+"';document.getElementById('Password').value='"+password+"';document.getElementById('logon-form').submit();})()");
-                oAuth2WebView.loadUrl("javascript:(function(){document.getElementById('AuthorizeForm').submit();})()");
-
-            }
-        });
-        oAuth2WebView.loadUrl("https://api.moj.io/account/signin?ReturnUrl=%2FOAuth2Sandbox%2Fauthorize%3Fresponse_type%3Dtoken%26client_id%3Dddf63e97-865a-4b95-8e2f-d414d8e2d5b1%26redirect_uri%3Dmyfirstmojio%3A%2F%2F");
     }
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
         if (requestCode == OAUTH_REQUEST) {
-            Toast.makeText(Login.this, "On Activity Result Called", Toast.LENGTH_LONG).show();
+            //Toast.makeText(Login.this, "On Activity Result Called", Toast.LENGTH_LONG).show();
             // We now have a stored access token
             if (resultCode == RESULT_OK) {
-                Toast.makeText(Login.this, "On Activity Result Called", Toast.LENGTH_LONG).show();
-                //getCurrentUser(); // Now attempt to get user info
                 launchMainActivity();
-            }
-            else {
-                Toast.makeText(Login.this, "On Activity Result login failed", Toast.LENGTH_LONG).show();
+            }else {
+                loginFailure();
             }
         }
     }
@@ -126,4 +88,21 @@ public class Login extends Activity {
         Intent mainActivity = new Intent(Login.this, MainActivity.class);
         startActivity(mainActivity);
     }
+
+    private void internetUnavailable(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+        builder.setMessage(R.string.connectionAlert);
+        builder.setTitle(R.string.invalid_internet);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void loginFailure(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+        builder.setMessage(R.string.LoginFailureBody);
+        builder.setTitle(R.string.LoginFailureTitle);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }

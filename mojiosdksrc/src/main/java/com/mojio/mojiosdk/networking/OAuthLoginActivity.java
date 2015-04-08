@@ -32,11 +32,12 @@ public class OAuthLoginActivity extends Activity {
         _loginWebView = (WebView) findViewById(R.id.loginwebview);
         Log.d("Url: ", _redirectUrl);
         Log.e(TAG, "Auth url: " + _urlPath);
+        _loginWebView.getSettings().setJavaScriptEnabled(true);
         _loginWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.e(TAG, "Redirecting to url: " + url);
                 if (url.startsWith(_redirectUrl)) {
-
+                    Log.d("WEBVIEW RETURN", "webview return");
                     // Note, the url returned cannot be parsed correctly via Uri parse.
                     // Need to manually pull out access_token, expires_in
                     String [] parameters = url.split("&");
