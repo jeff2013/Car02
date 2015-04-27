@@ -1,16 +1,38 @@
+<!--
+    This is used to style our graph.
+    To do so, append any androidPlot styling with androidPlot
+    Then follow with getters and setters with get/set removed
+    EX: plot.getGraphWidget.getBackgroundPaint.setColor(#ffffff); goes to
+    androidPlot.graphWidget.backgroundPaint.color="#ffffff"
+    More documentation at http://androidplot.com/docs/xml-styling-with-configurator/
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context="com.example.jeff.car02.Fragments.DynamicXYPlotFragment"
-    android:background="#ffffffff"
-    >
+    android:background="#ffffffff">
 
-    <!-- TODO: Update blank fragment layout -->
     <com.androidplot.xy.XYPlot
         android:id="@+id/XYPlot"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#ffffffff" />
-
+        android:background="#ffffffff"
+        androidPlot.backgroundPaint.color="#ffffff"
+        androidPlot.graphWidget.backgroundPaint.color="#ffffff"
+        androidPlot.graphWidget.gridBackgroundPaint.color="#ffffff"
+        androidPlot.graphWidget.domainGridLinePaint.color="#ffffff"
+        androidPlot.graphWidget.domainLabelOrientation="-45"
+        androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_label_font_size"
+        androidPlot.graphWidget.domainLabelPaint.color="#000000"
+        androidPlot.graphWidget.domainLabelVerticalOffset="@dimen/domain_label_font_size"
+        androidPlot.graphWidget.rangeGridLinePaint.color="#cccccc"
+        androidPlot.graphWidget.rangeLabelPaint.color="#000000"
+        androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_label_font_size"
+        androidPlot.graphWidget.paddingLeft="@dimen/plot_left_padding"
+        androidPlot.graphWidget.paddingTop="@dimen/plot_top_padding"
+        androidPlot.graphWidget.paddingRight="@dimen/plot_right_padding"
+        androidPlot.graphWidget.paddingBottom="@dimen/plot_bottom_padding"
+        androidPlot.legendWidget.visible="false"
+        androidPlot.ticksPerRangeLabel="3"/>
 </RelativeLayout>
