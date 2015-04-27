@@ -132,9 +132,7 @@ public class XYDataSource extends DataSource implements XYSeries{
                 notifier.notifyObservers();
 
                 Thread.sleep(currentUpdateInterval);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -145,10 +143,13 @@ public class XYDataSource extends DataSource implements XYSeries{
      * @param e the events to add
      */
     protected void addEvents(Event[] e) {
+        // There appears to be an issue with the data sets coming from the simulator
+        // It appears as if the server timestamps them, and the time data is /not/ correct
+        // This throws off all of our calculations. Postpone all algorithm testing until
+        // We can get  a good data set
         for(int i = 0; i < e.length; i++) {
             Event currEvent = e[i];
             // If the speed is zero, there is no good data here
-            // TODO: Fix the fucking algorithm
             if(currEvent.Speed != 0) {
                 if (lastImportantEvent != null) {
                     // Calculate Delta T
