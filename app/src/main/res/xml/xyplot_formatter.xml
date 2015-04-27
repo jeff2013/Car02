@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This is used to style our plot line instead of doing it programmatically
+    For documentation on how to use this, see http://androidplot.com/docs/xml-styling-with-configurator/
+-->
+    <config
+        linePaint.strokeWidth="2dp"
+        linePaint.color="#1dac3b"
+        linePaint.strokeJoin="1"
+        fillPaint.color="#00000000"
+        vertexPaint.color="#00000000"/>
+
