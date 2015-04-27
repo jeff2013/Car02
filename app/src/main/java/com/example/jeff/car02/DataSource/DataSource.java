@@ -1,10 +1,7 @@
 package com.example.jeff.car02.DataSource;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.mojio.mojiosdk.MojioClient;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
