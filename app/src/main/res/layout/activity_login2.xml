@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="com.example.jeff.car02.Login"
+    tools:context="com.example.jeff.car02.Activities.Login"
     android:id="@+id/relativelayoutlogin">
 
     <Button

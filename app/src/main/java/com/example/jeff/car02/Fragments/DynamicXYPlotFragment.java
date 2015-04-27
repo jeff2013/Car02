@@ -1,7 +1,5 @@
 package com.example.jeff.car02.Fragments;
 
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,9 +12,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.example.jeff.car02.DataSource.DataSource;
 import com.example.jeff.car02.DataSource.XYDataSource;
-import com.example.jeff.car02.DataSource.XYDataSource;
 import com.example.jeff.car02.R;
-import com.example.jeff.car02.Utilities;
 import com.mojio.mojiosdk.MojioClient;
 
 import java.text.FieldPosition;
