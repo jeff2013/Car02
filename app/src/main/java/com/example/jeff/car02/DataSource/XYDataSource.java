@@ -4,7 +4,7 @@ package com.example.jeff.car02.DataSource;
 import android.util.Log;
 
 import com.androidplot.xy.XYSeries;
-import com.example.jeff.car02.Utilities;
+import com.example.jeff.car02.Utilities.Utilities;
 import com.google.android.gms.maps.model.LatLng;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.TimeFormatHelpers;
@@ -16,7 +16,6 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
