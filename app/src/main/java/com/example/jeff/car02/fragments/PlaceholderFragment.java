@@ -1,4 +1,4 @@
-package com.example.jeff.car02.Fragments;
+package com.example.jeff.car02.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

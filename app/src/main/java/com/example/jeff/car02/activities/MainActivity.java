@@ -1,4 +1,4 @@
-package com.example.jeff.car02.Activities;
+package com.example.jeff.car02.activities;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -22,12 +22,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.jeff.car02.Fragments.DynamicXYPlotFragment;
-import com.example.jeff.car02.Fragments.Fragment_section1;
-import com.example.jeff.car02.Fragments.Fragment_section2;
-import com.example.jeff.car02.Fragments.Fragment_section4;
+import com.example.jeff.car02.fragments.DynamicXYPlotFragment;
+import com.example.jeff.car02.fragments.Fragment_section1;
+import com.example.jeff.car02.fragments.Fragment_section2;
+import com.example.jeff.car02.fragments.Fragment_section4;
 import com.example.jeff.car02.R;
-import com.example.jeff.car02.Utilities.singletonMojio;
+import com.example.jeff.car02.utilities.singletonMojio;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.models.User;
 import com.mojio.mojiosdk.models.Vehicle;
