@@ -21,7 +21,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait">
@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.Login"
+        <activity android:name=".activities.Login"
             android:label="login"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait">

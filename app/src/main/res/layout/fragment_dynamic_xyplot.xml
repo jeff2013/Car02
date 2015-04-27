@@ -10,7 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="com.example.jeff.car02.Fragments.DynamicXYPlotFragment"
+    tools:context="com.example.jeff.car02.fragments.DynamicXYPlotFragment"
     android:background="#ffffffff">
 
     <com.androidplot.xy.XYPlot

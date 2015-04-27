@@ -1,4 +1,4 @@
-package com.example.jeff.car02.Fragments;
+package com.example.jeff.car02.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;

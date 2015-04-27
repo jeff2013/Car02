@@ -1,14 +1,8 @@
-package com.example.jeff.car02.Utilities;
-
-import android.util.Log;
+package com.example.jeff.car02.utilities;
 
 import com.mojio.mojiosdk.TimeFormatHelpers;
-import com.mojio.mojiosdk.models.Event;
 
 import org.joda.time.DateTime;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by reed on 3/26/15.

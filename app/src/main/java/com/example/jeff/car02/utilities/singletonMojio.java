@@ -1,4 +1,4 @@
-package com.example.jeff.car02.Utilities;
+package com.example.jeff.car02.utilities;
 
 import android.app.Activity;
 import android.content.Context;

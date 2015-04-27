@@ -1,10 +1,10 @@
-package com.example.jeff.car02.DataSource;
+package com.example.jeff.car02.datasource;
 
 
 import android.util.Log;
 
 import com.androidplot.xy.XYSeries;
-import com.example.jeff.car02.Utilities.Utilities;
+import com.example.jeff.car02.utilities.Utilities;
 import com.google.android.gms.maps.model.LatLng;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.TimeFormatHelpers;

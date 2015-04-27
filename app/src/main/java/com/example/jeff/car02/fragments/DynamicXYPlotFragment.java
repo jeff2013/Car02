@@ -1,4 +1,4 @@
-package com.example.jeff.car02.Fragments;
+package com.example.jeff.car02.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.example.jeff.car02.DataSource.DataSource;
-import com.example.jeff.car02.DataSource.XYDataSource;
+import com.example.jeff.car02.datasource.DataSource;
+import com.example.jeff.car02.datasource.XYDataSource;
 import com.example.jeff.car02.R;
 import com.mojio.mojiosdk.MojioClient;
 
