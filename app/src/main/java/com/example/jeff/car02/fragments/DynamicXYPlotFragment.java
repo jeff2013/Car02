@@ -101,7 +101,7 @@ public class DynamicXYPlotFragment extends Fragment {
         // Format the date into a readable format
         dynamicPlot.setDomainValueFormat(new Format() {
 
-            private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mma");
 
             @Override
             public StringBuffer format(Object object, StringBuffer buffer, FieldPosition field) {
