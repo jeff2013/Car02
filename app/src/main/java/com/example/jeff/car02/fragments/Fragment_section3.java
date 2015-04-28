@@ -1,6 +1,7 @@
 package com.example.jeff.car02.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class Fragment_section3 extends SupportMapFragment {
                     builder.include(positions.get(0));
                 }
                 List<LatLng> points = new ArrayList<LatLng>(2);
+                Log.d("Map update", "called, num_points = " + Integer.toString(positions.size()));
 
                 int i=1;
                 for (; i < dataSource.size() && i < positions.size(); ++i) {
