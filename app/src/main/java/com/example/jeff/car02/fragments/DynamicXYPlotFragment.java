@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.example.jeff.car02.datasource.DataSource;
-import com.example.jeff.car02.datasource.XYDataSource;
+import com.example.jeff.car02.data.DataSource;
+import com.example.jeff.car02.data.XYDataSource;
 import com.example.jeff.car02.R;
 import com.mojio.mojiosdk.MojioClient;
 
