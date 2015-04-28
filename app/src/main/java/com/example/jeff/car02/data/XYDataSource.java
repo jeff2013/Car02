@@ -128,8 +128,7 @@ public class XYDataSource extends DataSource implements XYSeries{
                 addEvents(e);
                 offset += e.length;
                 // Notify all observers that the data has been changed
-                notifier.notifyObservers();
-
+                this.notifyObservers();
                 Thread.sleep(currentUpdateInterval);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -11,41 +11,21 @@ import java.util.Observer;
  * It is the layer used to poll the Mojio client for data
  * This is Runnable to prevent blocking on the main thread
  */
-public abstract class DataSource implements Runnable{
+public abstract class DataSource extends Observable implements Runnable{
 
-    protected MyObserver notifier;
     protected MojioClient mojioClient;
     // The status of the thread
     protected boolean isRunning;
 
     public DataSource(MojioClient mojioClient) {
         this.mojioClient = mojioClient;
-        notifier = new MyObserver();
         isRunning = true;
-    }
-
-    /**
-     * Adds an observer
-     * @param obs The observer to add
-     * @see java.util.Observable#addObserver(java.util.Observer)
-     */
-    public void addObserver(Observer obs) {
-        notifier.addObserver(obs);
-    }
-
-    /**
-     * Deletes an observer
-     * @param obs The observer to delete
-     * @see java.util.Observable#deleteObserver(java.util.Observer)
-     */
-    public void deleteObserver(Observer obs) {
-        notifier.deleteObserver(obs);
     }
 
     /**
      * Forces the DataSource to notify all observers
      */
-    public void forceUpdate() {notifier.notifyObservers();}
+    public void forceUpdate() {this.notifyObservers();}
 
     /**
      * Pauses the thread if possible
@@ -72,11 +52,9 @@ public abstract class DataSource implements Runnable{
      * The Observer implementation
      * Used to register and notify observers that data has changed
      */
-    class MyObserver extends Observable {
-        @Override
-        public void notifyObservers() {
-            setChanged();
-            super.notifyObservers();
-        }
-    }
+     @Override
+     public void notifyObservers() {
+        setChanged();
+        super.notifyObservers();
+     }
 }
