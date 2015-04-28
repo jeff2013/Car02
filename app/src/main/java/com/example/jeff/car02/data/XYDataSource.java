@@ -179,6 +179,7 @@ public class XYDataSource extends DataSource implements XYSeries{
                 needQuery = true;
             }
             locations.add(new LatLng(currEvent.Location.Lat, currEvent.Location.Lng));
+            Log.d("LOCATION:", "Lat = " + currEvent.Location.Lat + " Lng = " + currEvent.Location.Lng);
             events.add(currEvent);
         }
     }
