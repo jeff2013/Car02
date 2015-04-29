@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import com.example.jeff.car02.data.DataTypes;
 import com.example.jeff.car02.data.XYDataSource;
 import com.example.jeff.car02.utilities.singletonMojio;
@@ -30,7 +31,7 @@ import java.util.Observer;
 /**
  * Created by jeff on 2015-03-14.
  */
-public class Fragment_section3 extends SupportMapFragment {
+public class MapFragment extends SupportMapFragment {
     private GoogleMap map;
 
     private XYDataSource dataSource;

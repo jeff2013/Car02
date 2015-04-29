@@ -1,6 +1,5 @@
 package com.example.jeff.car02.data;
 
-
 import android.util.Log;
 
 import com.androidplot.xy.XYSeries;

@@ -1,6 +1,7 @@
 package com.example.jeff.car02.utilities;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 
 import com.mojio.mojiosdk.MojioClient;

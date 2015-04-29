@@ -23,7 +23,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.jeff.car02.fragments.DynamicXYPlotFragment;
-import com.example.jeff.car02.fragments.Fragment_section1;
+import com.example.jeff.car02.fragments.SummaryFragment;
 import com.example.jeff.car02.fragments.Fragment_section2;
 import com.example.jeff.car02.fragments.Fragment_section3;
 import com.example.jeff.car02.fragments.Fragment_section4;
@@ -310,15 +310,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            Fragment position_fragment = new Fragment_section1();
+            Fragment position_fragment = new SummaryFragment();
 
             switch(position){
                 case 0:
                     position_fragment = new DynamicXYPlotFragment();
                     break;
                 case 1:
-                    position_fragment = new Fragment_section1();
-                    ((Fragment_section1)position_fragment).setMojio(mMojio);
+                    position_fragment = new SummaryFragment();
+                    ((SummaryFragment)position_fragment).setMojio(mMojio);
                     break;
                 case 2:
                     //TODO change back to launching fragment_section3() once map is fixed. Map crashes app.
