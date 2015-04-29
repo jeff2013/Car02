@@ -222,7 +222,7 @@ public class MainActivityNav extends ActionBarActivity
                     break;
                 case 2: fragment = new SummaryFragment();
                     break;
-                default: fragment = new PlaceholderFragment();
+                default: fragment = new MapFragment();
             }
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
