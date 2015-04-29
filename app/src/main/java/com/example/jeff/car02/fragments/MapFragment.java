@@ -96,9 +96,7 @@ public class MapFragment extends SupportMapFragment {
                             last_pos = positions.get(i);
                         }
 
-                        for (; i < segments.size(); ++i)
-
-                        {
+                        for (; i < segments.size(); ++i) {
                             segments.get(i).setVisible(false);
                         }
 
