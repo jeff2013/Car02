@@ -13,6 +13,7 @@ import com.androidplot.xy.XYSeries;
 import com.example.jeff.car02.data.DataSource;
 import com.example.jeff.car02.data.XYDataSource;
 import com.example.jeff.car02.R;
+import com.example.jeff.car02.utilities.singletonMojio;
 import com.mojio.mojiosdk.MojioClient;
 
 import java.text.FieldPosition;
@@ -43,7 +44,6 @@ public class DynamicXYPlotFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private DynamicXYPlotUpdater plotUpdater;
     private LineAndPointFormatter format;
-    private MojioClient mMojio;
     private XYDataSource d;
 
     // Used to get updates from the data source
@@ -121,8 +121,7 @@ public class DynamicXYPlotFragment extends Fragment {
         format = new LineAndPointFormatter();
         format.configure(getActivity().getApplicationContext(), R.xml.xyplot_formatter);
         // Set up a data source
-        this.data = new XYDataSource(mMojio, 1000, 20000);
-        setDataSource(data);
+        this.data = new XYDataSource(singletonMojio.getMojioClient(this.getActivity().getApplicationContext()), 1000, 20000);
         enableDataSource();
         return view;
     }
@@ -151,14 +150,6 @@ public class DynamicXYPlotFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * Changes the data source
-     * @param data
-     */
-    public void setDataSource(DataSource data) {
-        this.data = data;
-    }
-
     public void enableDataSource() {
         // Add the data as a series
         // Don't attempt to use a non XYSeries DataSource
@@ -167,10 +158,6 @@ public class DynamicXYPlotFragment extends Fragment {
         this.data.addObserver(plotUpdater);
         dataThread = new Thread(data);
         dataThread.start();
-    }
-
-    public void setMojioClient(MojioClient m) {
-        mMojio = m;
     }
 
     /**
