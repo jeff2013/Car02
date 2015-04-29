@@ -16,15 +16,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.jeff.car02.fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.fragments.SummaryFragment;
 import com.example.jeff.car02.fragments.Fragment_section2;
+import com.example.jeff.car02.fragments.MapFragment;
 import com.example.jeff.car02.fragments.Fragment_section4;
 import com.example.jeff.car02.R;
 import com.example.jeff.car02.utilities.singletonMojio;
@@ -85,7 +86,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         mMojio = singletonMojio.getMojioClient(MainActivity.this);
         //mMojio = new MojioClient(this, MOJIO_APP_ID, null, REDIRECT_URL);
         if(mMojio.isUserLoggedIn()){
-            Toast.makeText(this, "MainActivity oncreate reached!", Toast.LENGTH_SHORT).show();
             getCurrentUser();
             //getUserVehicles();
             successful_Login();
@@ -108,13 +108,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         if (requestCode == OAUTH_REQUEST) {
             // We now have a stored access token
             if (resultCode == RESULT_OK) {
-                Toast.makeText(MainActivity.this, "Logged in successfully main activity", Toast.LENGTH_LONG).show();
                 //getCurrentUser(); // Now attempt to get user info
                 getCurrentUser();
                 successful_Login();
-            }
-            else {
-                Toast.makeText(MainActivity.this, "Problem logging in", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -148,8 +144,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 if(hasvalidConnection()){
                     mMojio.launchLoginActivity(MainActivity.this, OAUTH_REQUEST);
                     successful_Login();
-                }else{
-                    Toast.makeText(MainActivity.this, "Please aquire internet access", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -191,13 +185,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     getUserVehicles();
 
                 } catch (Exception e) {
-                    Toast.makeText(MainActivity.this, "Problem getting users", Toast.LENGTH_LONG).show();
+                    Log.e("ERROR:", e.getMessage());
                 }
             }
 
             @Override
             public void onFailure(String error) {
-                Toast.makeText(MainActivity.this, "Problem getting users", Toast.LENGTH_LONG).show();
+                Log.e("ERROR:", error);
             }
         });
     }
@@ -215,13 +209,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 mUserVehicles = result; // Save
 
                 if (mUserVehicles.length == 0) {
-                    Toast.makeText(MainActivity.this, "No vehicles found", Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", "No Vehicles Found");
                 }
             }
 
             @Override
             public void onFailure(String error) {
-                Toast.makeText(MainActivity.this, "Problem getting vehicles", Toast.LENGTH_LONG).show();
+                Log.e("ERROR", error);
             }
         });
     }
@@ -321,7 +315,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch(position){
                 case 0:
                     position_fragment = new DynamicXYPlotFragment();
-                    ((DynamicXYPlotFragment)position_fragment).setMojioClient(mMojio);
                     break;
                 case 1:
                     position_fragment = new SummaryFragment();
@@ -329,8 +322,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     break;
                 case 2:
                     //TODO change back to launching fragment_section3() once map is fixed. Map crashes app.
-                    position_fragment = new Fragment_section4();
-                    //position_fragment = new Fragment_section3();
+                    //position_fragment = new Fragment_section4();
+                    position_fragment = new MapFragment();
                     //((Fragment_section3)position_fragment).setMojioClient(mMojio);
                     break;
                 case 3:
