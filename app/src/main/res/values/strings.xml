@@ -6,7 +6,7 @@
     <string name="title_section1">Graph</string>
     <string name="title_section2">Trip Data</string>
     <string name="title_section3">Map</string>
-    <string name="title_section4">Graph Settings</string>
+    <string name="title_section4">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="fragment1">Fragment 1</string>

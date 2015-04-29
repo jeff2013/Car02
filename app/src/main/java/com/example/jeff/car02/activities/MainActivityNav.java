@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.jeff.car02.R;
 import com.example.jeff.car02.fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.fragments.MapFragment;
+import com.example.jeff.car02.fragments.SettingsFragment;
 import com.example.jeff.car02.fragments.SummaryFragment;
 import com.example.jeff.car02.utilities.singletonMojio;
 import com.mojio.mojiosdk.MojioClient;
@@ -159,6 +160,9 @@ public class MainActivityNav extends ActionBarActivity
             case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
+            case 4:
+                mTitle = getString(R.string.title_section4);
+                break;
         }
     }
 
@@ -223,6 +227,8 @@ public class MainActivityNav extends ActionBarActivity
                 case 2: fragment = new SummaryFragment();
                     break;
                 case 3: fragment = new MapFragment();
+                    break;
+                case 4: fragment = new SettingsFragment();
                     break;
                 default: fragment = new PlaceholderFragment();
             }
