@@ -9,7 +9,7 @@ import com.mojio.mojiosdk.MojioClient;
 /**
  * Created by jeff on 2015-03-28.
  */
-public class singletonMojio extends Activity{
+public class singletonMojio{
 
     private static singletonMojio singletonMojioInstance;
     private static MojioClient mojioClient;
@@ -24,7 +24,7 @@ public class singletonMojio extends Activity{
 
     public static MojioClient getMojioClient(Context context){
         if(mojioClient == null){
-            singletonMojioInstance = new singletonMojio(context);
+            singletonMojioInstance = new singletonMojio(context.getApplicationContext());
             return mojioClient;
         }
         return mojioClient;
