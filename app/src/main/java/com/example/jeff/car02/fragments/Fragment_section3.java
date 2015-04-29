@@ -1,11 +1,13 @@
 package com.example.jeff.car02.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.jeff.car02.data.DataTypes;
 import com.example.jeff.car02.data.XYDataSource;
 import com.example.jeff.car02.utilities.singletonMojio;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,6 +44,7 @@ public class Fragment_section3 extends SupportMapFragment {
         segments = new ArrayList<Polyline>();
 
         dataSource = new XYDataSource(singletonMojio.getMojioClient(getActivity().getApplicationContext()), 1000, 20000);
+        dataSource.selectYOutput(DataTypes.SPEED);
         dataSource.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {
@@ -70,22 +73,19 @@ public class Fragment_section3 extends SupportMapFragment {
 
                         {
                             float normalisedData = dataSource.getY(i).floatValue() / maxData;
-                            float colour = (BitmapDescriptorFactory.HUE_RED - BitmapDescriptorFactory.HUE_BLUE) * normalisedData + BitmapDescriptorFactory.HUE_BLUE;
-                            colour = colour > 359 ? 359 : colour;
-                            colour = colour < 0 ? 0 : colour;
+                            int colour = Color.argb(0xff, (int) (0xff * (1 - normalisedData)), (int) (0xff * (normalisedData)), 0);
 
                             builder.include(positions.get(i));
-
-                            if (i < segments.size()) {
-                                Polyline line = segments.get(i);
+                            if (i - 1 < segments.size()) {
+                                Polyline line = segments.get(i - 1);
                                 line.setVisible(true);
                                 points.set(0, last_pos);
                                 points.set(1, positions.get(i));
                                 line.setPoints(points);
-                                line.setColor((int) colour);
+                                line.setColor(colour);
                             } else {
                                 PolylineOptions opts = new PolylineOptions();
-                                opts.color((int) colour);
+                                opts.color(colour);
                                 opts.add(last_pos, positions.get(i));
                                 opts.visible(true);
                                 segments.add(map.addPolyline(opts));
