@@ -24,7 +24,6 @@ import android.widget.Button;
 
 import com.example.jeff.car02.fragments.DynamicXYPlotFragment;
 import com.example.jeff.car02.fragments.SummaryFragment;
-import com.example.jeff.car02.fragments.Fragment_section2;
 import com.example.jeff.car02.fragments.MapFragment;
 import com.example.jeff.car02.fragments.Fragment_section4;
 import com.example.jeff.car02.R;
@@ -321,17 +320,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     ((SummaryFragment)position_fragment).setMojio(mMojio);
                     break;
                 case 2:
-                    //TODO change back to launching fragment_section3() once map is fixed. Map crashes app.
-                    //position_fragment = new Fragment_section4();
                     position_fragment = new MapFragment();
-                    //((Fragment_section3)position_fragment).setMojioClient(mMojio);
                     break;
                 case 3:
                     position_fragment = new Fragment_section4();
-                    break;
-                default:
-                    position_fragment = new Fragment_section2();
-
                     break;
             }
             return position_fragment;
