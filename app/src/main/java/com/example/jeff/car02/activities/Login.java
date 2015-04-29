@@ -75,7 +75,7 @@ public class Login extends Activity {
     }
 
     private void launchMainActivity(){
-        Intent mainActivity = new Intent(Login.this, MainActivity.class);
+        Intent mainActivity = new Intent(Login.this, MainActivityNav.class);
         startActivity(mainActivity);
     }
 

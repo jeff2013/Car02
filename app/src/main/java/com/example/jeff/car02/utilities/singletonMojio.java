@@ -1,6 +1,7 @@
 package com.example.jeff.car02.utilities;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 
 import com.mojio.mojiosdk.MojioClient;
@@ -18,7 +19,7 @@ public class singletonMojio extends Activity{
     private final static String SECRET_KEY= "872bca1d-9a0c-4ad4-932b-3b696658df55";
 
     private singletonMojio(Context context){
-        mojioClient = new MojioClient(context, MOJIO_APP_ID, null, REDIRECT_URL);
+        mojioClient = new MojioClient(context, MOJIO_APP_ID, SECRET_KEY, REDIRECT_URL);
     }
 
     public static MojioClient getMojioClient(Context context){

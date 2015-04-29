@@ -23,12 +23,12 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Fragment_section1.OnFragmentInteractionListener} interface
+ * {@link SummaryFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Fragment_section1#newInstance} factory method to
+ * Use the {@link SummaryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Fragment_section1 extends Fragment {
+public class SummaryFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,8 +57,8 @@ public class Fragment_section1 extends Fragment {
      * @return A new instance of fragment section1.
      */
     // TODO: Rename and change types and number of parameters
-    public static Fragment_section1 newInstance(String param1, String param2) {
-        Fragment_section1 fragment = new Fragment_section1();
+    public static SummaryFragment newInstance(String param1, String param2) {
+        SummaryFragment fragment = new SummaryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,7 +66,7 @@ public class Fragment_section1 extends Fragment {
         return fragment;
     }
 
-    public Fragment_section1() {
+    public SummaryFragment() {
         // Required empty public constructor
     }
 
@@ -92,7 +92,7 @@ public class Fragment_section1 extends Fragment {
     }
 
     public void recieveData(){
-        Toast.makeText(Fragment_section1.this.getActivity(), "Success", Toast.LENGTH_SHORT).show();
+        Toast.makeText(SummaryFragment.this.getActivity(), "Success", Toast.LENGTH_SHORT).show();
         Map<String, String> queryParam = new HashMap();
         queryParam.put("limit", "1000");
         queryParam.put("offset", "0");
@@ -100,7 +100,7 @@ public class Fragment_section1 extends Fragment {
             @Override
             public void onSuccess(Trip[] result) {
                 tripsC02 = result[result.length-1].Distance *result[result.length-1].getFuelEfficiency() *2.3035f/100;
-                Toast.makeText(Fragment_section1.this.getActivity(), "OnSuccess Reached", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SummaryFragment.this.getActivity(), "OnSuccess Reached", Toast.LENGTH_SHORT).show();
                 textView_totalC02.setText(Float.toString(tripsC02) + " kgC02");
                 textView_totalC02.invalidate();
 

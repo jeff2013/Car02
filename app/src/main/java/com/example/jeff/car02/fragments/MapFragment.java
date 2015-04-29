@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import com.example.jeff.car02.data.XYDataSource;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +25,7 @@ import java.util.Observer;
 /**
  * Created by jeff on 2015-03-14.
  */
-public class Fragment_section3 extends SupportMapFragment {
+public class MapFragment extends SupportMapFragment {
     private GoogleMap map;
 
     private MojioClient mMojio;
