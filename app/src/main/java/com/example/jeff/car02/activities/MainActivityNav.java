@@ -222,6 +222,8 @@ public class MainActivityNav extends ActionBarActivity
                     break;
                 case 2: fragment = new SummaryFragment();
                     break;
+                case 3: fragment = new MapFragment();
+                    break;
                 default: fragment = new PlaceholderFragment();
             }
             Bundle args = new Bundle();
