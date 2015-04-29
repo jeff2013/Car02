@@ -1,5 +1,6 @@
 package com.example.jeff.car02.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,9 +72,10 @@ public class MapFragment extends SupportMapFragment {
 
                         {
                             float normalisedData = dataSource.getY(i).floatValue() / maxData;
-                            float colour = (BitmapDescriptorFactory.HUE_RED - BitmapDescriptorFactory.HUE_BLUE) * normalisedData + BitmapDescriptorFactory.HUE_BLUE;
-                            colour = colour > 359 ? 359 : colour;
-                            colour = colour < 0 ? 0 : colour;
+                            //float colour = (BitmapDescriptorFactory.HUE_RED - BitmapDescriptorFactory.HUE_BLUE) * normalisedData + BitmapDescriptorFactory.HUE_BLUE;
+                            //colour = colour > 359 ? 359 : colour;
+                            //colour = colour < 0 ? 0 : colour;
+                            int colour = Color.argb(0xff, (int)(0xff*normalisedData), (int)(0xff*(1- normalisedData)), 0);
 
                             builder.include(positions.get(i));
 
