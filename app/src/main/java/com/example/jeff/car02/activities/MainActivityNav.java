@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.internal.app.ToolbarActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,11 +58,13 @@ public class MainActivityNav extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         sharedPreferences = getSharedPreferences(graphData, Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("Data", 0).apply();
         mMojio = singletonMojio.getMojioClient(MainActivityNav.this);
+
         if(mMojio.isUserLoggedIn()){
             Toast.makeText(this, "MainActivity oncreate reached!", Toast.LENGTH_SHORT).show();
             getCurrentUser();

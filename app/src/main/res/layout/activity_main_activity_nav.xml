@@ -2,17 +2,13 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="com.example.jeff.car02.activities.MainActivityNav">
+    tools:context="com.example.jeff.car02.activities.MainActivityNav"
+    android:fitsSystemWindows="true">
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HI WORLD"/>
-        </FrameLayout>
+        android:layout_height="match_parent"/>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
          this as a sliding drawer on the left side for left-to-right
@@ -25,6 +21,6 @@
     android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"
     android:layout_gravity="start"
     android:name="com.example.jeff.car02.activities.NavigationDrawerFragment"
-    tools:layout="@layout/fragment_navigation_drawer" />
+    tools:layout="@layout/fragment_navigation_drawer"/>
 
 </android.support.v4.widget.DrawerLayout>
