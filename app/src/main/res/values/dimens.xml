@@ -11,5 +11,6 @@
     <dimen name="plot_right_padding">50dp</dimen>
     <dimen name="plot_bottom_padding">60dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
+    <dimen name="tool_bar_height">56dp</dimen>
 
 </resources>
