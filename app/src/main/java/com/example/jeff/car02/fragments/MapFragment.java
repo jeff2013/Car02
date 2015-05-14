@@ -44,6 +44,7 @@ public class MapFragment extends SupportMapFragment {
         segments = new ArrayList<Polyline>();
 
         dataSource = new XYDataSource(singletonMojio.getMojioClient(getActivity().getApplicationContext()), 1000, 20000);
+        dataSource.selectYOutput(DataTypes.FUEL_EFFICIENCY);
         dataSource.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {
@@ -65,6 +66,8 @@ public class MapFragment extends SupportMapFragment {
                         }
 
                         List<LatLng> points = new ArrayList<LatLng>(2);
+                        points.add(null);
+                        points.add(null);
                         Log.d("Map update", "called, num_points = " + Integer.toString(positions.size()));
 
                         int i = 1;

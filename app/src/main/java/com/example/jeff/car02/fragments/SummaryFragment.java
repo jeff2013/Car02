@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jeff.car02.R;
+import com.example.jeff.car02.utilities.singletonMojio;
 import com.mojio.mojiosdk.MojioClient;
 import com.mojio.mojiosdk.models.Trip;
 
@@ -77,6 +78,7 @@ public class SummaryFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mojioClient = singletonMojio.getMojioClient(getActivity().getApplicationContext());
     }
 
     @Override
@@ -87,7 +89,7 @@ public class SummaryFragment extends Fragment {
         textView_totalC02 = (TextView) v.findViewById(R.id.textview_C02);
         textView_FuelEfficiency = (TextView) v.findViewById(R.id.textview_FuelEfficiency);
         textView_DistanceTraveled = (TextView) v.findViewById(R.id.textView_DistanceTraveled);
-        //recieveData();
+        recieveData();
         return v;
     }
 
@@ -100,7 +102,7 @@ public class SummaryFragment extends Fragment {
             @Override
             public void onSuccess(Trip[] result) {
                 tripsC02 = result[result.length-1].Distance *result[result.length-1].getFuelEfficiency() *2.3035f/100;
-                Toast.makeText(SummaryFragment.this.getActivity(), "OnSuccess Reached", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SummaryFragment.this.getActivity(), "OnSuccess Reached", Toast.LENGTH_SHORT).show();
                 textView_totalC02.setText(Float.toString(tripsC02) + " kgC02");
                 textView_totalC02.invalidate();
 
